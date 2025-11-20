@@ -33,7 +33,6 @@
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
                         'vibrate': 'vibrate 0.3s linear infinite both', 
                         'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
-                        'tag-pop': 'tagPop 0.4s ease-out forwards',
                     },
                     keyframes: {
                         fadeInUp: {
@@ -51,11 +50,6 @@
                         popIn: {
                             '0%': { opacity: '0', transform: 'scale(0.8) translateY(10px)' },
                             '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
-                        },
-                        tagPop: {
-                            '0%': { opacity: '0', transform: 'scale(0.5)' },
-                            '70%': { transform: 'scale(1.1)' },
-                            '100%': { opacity: '1', transform: 'scale(1)' }
                         }
                     }
                 }
@@ -202,13 +196,10 @@
             animation: vibrate 0.4s linear 3; /* Vibrate 3 times then stop */
         }
 
-        /* Modal Tag Animation */
+        /* Modal Tag Visibility - No Animation */
         .modal-tag {
-            opacity: 0;
-            transform: scale(0.8);
-        }
-        .modal-tag.animate {
-            animation: tagPop 0.4s ease-out forwards;
+            opacity: 1;
+            transform: none;
         }
 
         /* Timeline & Glow Effect */
@@ -367,22 +358,22 @@
                 </a>
             </div>
 
-            <!-- Key Stats Grid -->
+            <!-- Key Stats Grid with Counter Animation -->
             <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/5 pt-12 reveal active" style="transition-delay: 400ms;">
                 <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
-                    <div class="text-4xl font-bold text-brand-yellow">8+</div>
+                    <div class="text-4xl font-bold text-brand-yellow counter" data-target="8" data-suffix="+">0+</div>
                     <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Years Experience</div>
                 </div>
                 <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
-                    <div class="text-4xl font-bold text-white">100+</div>
+                    <div class="text-4xl font-bold text-white counter" data-target="100" data-suffix="+">0+</div>
                     <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Screens Developed</div>
                 </div>
                 <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
-                    <div class="text-4xl font-bold text-brand-yellow">9M+</div>
+                    <div class="text-4xl font-bold text-brand-yellow counter" data-target="9" data-suffix="M+">0M+</div>
                     <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Impacted Users</div>
                 </div>
                 <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
-                    <div class="text-4xl font-bold text-white">₹80L+</div>
+                    <div class="text-4xl font-bold text-white counter" data-target="80" data-prefix="₹" data-suffix="L+">₹0L+</div>
                     <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Revenue Generated</div>
                 </div>
             </div>
@@ -397,15 +388,13 @@
                 <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="industry-logo brightness-100 invert-0 bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="industry-logo bg-white p-1 rounded">
                 <img src="https://logo.clearbit.com/sbi.co.in" alt="SBI" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
-                
-                <!-- High Quality SVGs for Yes Bank & Union Bank -->
-                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Yes_Bank_Logo.svg" alt="Yes Bank" class="industry-logo bg-white p-1 rounded" style="padding: 8px;">
-                 <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Union_Bank_of_India_Logo.svg" alt="Union Bank" class="industry-logo bg-white p-1 rounded" style="padding: 6px;">
-
                 <img src="https://logo.clearbit.com/mahindrafinance.com" alt="Mahindra Finance" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://logo.clearbit.com/qualitykiosk.com" alt="Quality Kiosk" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                <span class="hidden text-xl font-bold text-gray-400 hover:text-white transition-colors cursor-default">AQM</span>
+                
+                <!-- Updated Union Bank & Yes Bank with Clearbit URLs -->
+                <img src="https://logo.clearbit.com/unionbankofindia.co.in" alt="Union Bank" class="industry-logo bg-white p-1 rounded" style="padding: 6px;">
+                <img src="https://logo.clearbit.com/yesbank.in" alt="Yes Bank" class="industry-logo bg-white p-1 rounded" style="padding: 8px;">
             </div>
         </div>
     </section>
@@ -979,6 +968,34 @@
             }, 1000);
         }
 
+        // --- Counter Animation Function ---
+        function animateCounter(el) {
+            const target = parseInt(el.getAttribute('data-target'));
+            const prefix = el.getAttribute('data-prefix') || '';
+            const suffix = el.getAttribute('data-suffix') || '';
+            const duration = 2000; // 2 seconds
+            const startTime = performance.now();
+
+            function update(currentTime) {
+                const elapsed = currentTime - startTime;
+                const progress = Math.min(elapsed / duration, 1);
+                
+                // Easing function (easeOutExpo)
+                const ease = progress === 1 ? 1 : 1 - Math.pow(2, -10 * progress);
+                
+                const current = Math.floor(ease * target);
+                el.innerText = `${prefix}${current}${suffix}`;
+
+                if (progress < 1) {
+                    requestAnimationFrame(update);
+                } else {
+                    el.innerText = `${prefix}${target}${suffix}`; // Ensure final value is exact
+                }
+            }
+            
+            requestAnimationFrame(update);
+        }
+
         // --- Data Objects for Modals ---
         const projectsData = {
             'smbc': {
@@ -1252,6 +1269,16 @@
                     if(timelineLine) {
                         target.classList.add('timeline-active');
                     }
+                    
+                    // Trigger Counter Animation
+                    const counters = target.querySelectorAll('.counter');
+                    counters.forEach(counter => {
+                         // Ensure animation only runs once
+                         if (!counter.classList.contains('counted')) {
+                             animateCounter(counter);
+                             counter.classList.add('counted');
+                         }
+                    });
 
                 } else {
                     // Optional: Reset animation when out of view to replay it
