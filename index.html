@@ -1,0 +1,1325 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Yogesh K | Project / Product Manager & CSM®</title>
+    <meta name="description" content="Portfolio of Yogesh Kotkar, a Dynamic Project Manager and Certified Scrum Master with 8+ years in BFSI.">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <!-- Three.js for 3D Animation -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        brand: {
+                            black: '#050505',
+                            dark: '#0a0a0a',
+                            gray: '#1f1f1f',
+                            light: '#e5e5e5',
+                            yellow: '#FFD700',
+                            yellowHover: '#E6C200'
+                        }
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                    animation: {
+                        'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
+                        'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'vibrate': 'vibrate 0.3s linear infinite both', // Vibration animation
+                    },
+                    keyframes: {
+                        fadeInUp: {
+                            '0%': { opacity: '0', transform: 'translateY(20px)' },
+                            '100%': { opacity: '1', transform: 'translateY(0)' },
+                        },
+                        vibrate: {
+                            '0%': { transform: 'translate(0)' },
+                            '20%': { transform: 'translate(-2px, 2px)' },
+                            '40%': { transform: 'translate(-2px, -2px)' },
+                            '60%': { transform: 'translate(2px, 2px)' },
+                            '80%': { transform: 'translate(2px, -2px)' },
+                            '100%': { transform: 'translate(0)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { 
+            font-family: 'Inter', sans-serif; 
+            background-color: #050505; 
+            color: #e5e5e5;
+            overflow-x: hidden;
+        }
+
+        /* 3D Canvas Container */
+        #canvas-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            opacity: 1;
+            pointer-events: none;
+        }
+        
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 8px; }
+        ::-webkit-scrollbar-track { background: #121212; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
+        ::-webkit-scrollbar-thumb:hover { background: #FFD700; }
+        
+        .glass-card {
+            background: rgba(255, 255, 255, 0.03);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+
+        .glass-card:hover {
+            border-color: rgba(255, 215, 0, 0.4);
+            background: rgba(255, 255, 255, 0.06);
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px -12px rgba(0, 0, 0, 0.7);
+        }
+        
+        .reveal {
+            opacity: 0;
+            transform: translateY(30px);
+            transition: all 0.8s ease-out;
+        }
+        
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Ensure content is visible if JS fails or before animation triggers properly */
+        .no-js .reveal { opacity: 1; transform: none; }
+
+        .logo-container {
+            background: white;
+            padding: 4px;
+            border-radius: 50%;
+            box-shadow: 0 0 15px rgba(255, 255, 255, 0.1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.3s ease;
+            overflow: hidden;
+        }
+        
+        .logo-container:hover {
+            transform: scale(1.1);
+        }
+
+        .form-input {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            transition: all 0.3s ease;
+        }
+        .form-input:focus {
+            border-color: #FFD700;
+            outline: none;
+            background: rgba(255,255,255,0.08);
+            box-shadow: 0 0 0 2px rgba(255, 215, 0, 0.1);
+        }
+        
+        .industry-logo {
+            max-height: 48px;
+            width: auto;
+            object-fit: contain;
+        }
+
+        /* Skill Chips - Default Visible */
+        .skill-chip {
+            opacity: 1; 
+            transform: translateY(0);
+        }
+
+        /* Progress Bar Animation */
+        .progress-bar {
+            width: 0%; /* Start at 0 */
+            transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1); /* Smooth easing */
+        }
+        
+        /* Modal Styles */
+        #project-modal {
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+        #project-modal.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+        #project-modal:not(.hidden) {
+            opacity: 1;
+            visibility: visible;
+            pointer-events: auto;
+        }
+        #modal-content {
+            transform: scale(0.9);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+        #project-modal:not(.hidden) #modal-content {
+            transform: scale(1);
+        }
+        
+        /* Vibration Trigger Class */
+        .vibrate-active {
+            animation: vibrate 0.4s linear 3; /* Vibrate 3 times then stop */
+        }
+    </style>
+</head>
+<body class="antialiased selection:bg-brand-yellow selection:text-black">
+
+    <!-- 3D Animation Canvas -->
+    <div id="canvas-container"></div>
+
+    <!-- Modal Overlay -->
+    <div id="project-modal" class="hidden fixed inset-0 z-[100] flex items-center justify-center bg-black/80 backdrop-blur-sm p-4" onclick="closeModal(event)">
+        <div id="modal-wrapper" class="bg-[#111] border w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto transition-colors duration-300" onclick="event.stopPropagation()">
+            <!-- Close Button -->
+            <button onclick="closeModal()" class="absolute top-4 right-4 text-gray-400 hover:text-white transition-colors p-2 bg-black/50 rounded-full z-10">
+                <i data-lucide="x" class="w-6 h-6"></i>
+            </button>
+            
+            <div class="p-8 md:p-10">
+                <div class="flex items-center gap-4 mb-6">
+                    <!-- ID for dynamic background/icon color -->
+                    <div id="modal-icon" class="shrink-0">
+                        <!-- Icon/Image injected via JS -->
+                    </div>
+                    <div>
+                        <!-- ID for dynamic border and text color -->
+                        <span id="modal-company" class="text-xs font-bold px-2 py-1 rounded-full mb-2 inline-block border"></span>
+                        <h3 id="modal-title" class="text-2xl md:text-3xl font-bold text-white"></h3>
+                    </div>
+                </div>
+                
+                <div class="prose prose-invert max-w-none">
+                    <p id="modal-description" class="text-gray-300 text-lg leading-relaxed mb-6"></p>
+                    
+                    <div class="bg-white/5 rounded-lg p-6 border border-white/5">
+                        <!-- ID for dynamic text color -->
+                        <h4 id="modal-impact-title" class="font-bold text-sm uppercase tracking-wider mb-3">Key Highlights & Impact</h4>
+                        <ul id="modal-metrics" class="space-y-2 text-gray-300">
+                            <!-- List items injected via JS -->
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="mt-8 flex flex-wrap gap-2" id="modal-tags">
+                    <!-- Tags injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <div class="flex-shrink-0 font-bold text-xl tracking-tighter text-white group cursor-pointer">
+                    YK<span class="text-brand-yellow group-hover:text-white transition-colors">.</span>
+                </div>
+                <div class="hidden md:block">
+                    <div class="ml-10 flex items-baseline space-x-8">
+                        <a href="#about" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">About</a>
+                        <a href="#experience" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">Experience</a>
+                        <a href="#projects" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">Projects</a>
+                        <a href="#skills" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">Skills</a>
+                        <a href="#contact" class="bg-brand-yellow text-black hover:bg-brand-yellowHover px-5 py-2 rounded-sm text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,215,0,0.3)]">Contact Me</a>
+                    </div>
+                </div>
+                <div class="-mr-2 flex md:hidden">
+                    <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none">
+                        <i data-lucide="menu" class="h-6 w-6"></i>
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Mobile Menu -->
+        <div class="hidden md:hidden bg-brand-gray border-b border-white/10" id="mobile-menu">
+            <div class="px-2 pt-2 pb-3 space-y-1 sm:px-3">
+                <a href="#about" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-brand-yellow">About</a>
+                <a href="#experience" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-brand-yellow">Experience</a>
+                <a href="#projects" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-brand-yellow">Projects</a>
+                <a href="#skills" class="block px-3 py-2 rounded-md text-base font-medium text-gray-300 hover:text-brand-yellow">Skills</a>
+                <a href="#contact" class="block px-3 py-2 text-brand-yellow font-bold">Contact Me</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="relative min-h-screen flex items-center justify-center overflow-hidden pt-16" id="about">
+        <div class="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center z-10">
+            <div class="inline-flex items-center gap-2 px-4 py-2 mb-8 border border-brand-yellow/30 rounded-full bg-brand-yellow/5 reveal active backdrop-blur-sm">
+                <span class="relative flex h-2 w-2">
+                  <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-brand-yellow opacity-75"></span>
+                  <span class="relative inline-flex rounded-full h-2 w-2 bg-brand-yellow"></span>
+                </span>
+                <span class="text-brand-yellow text-xs font-bold tracking-[0.2em] uppercase">Certified Scrum Master®</span>
+            </div>
+            
+            <h1 class="text-5xl md:text-8xl font-bold tracking-tight mb-8 reveal active" style="transition-delay: 100ms;">
+                Yogesh <span class="relative inline-block">
+                    <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-br from-brand-yellow via-[#fffec4] to-white">K</span>
+                    <span class="absolute -bottom-2 left-0 w-full h-8 bg-brand-yellow/10 blur-xl -z-10"></span>
+                </span>
+            </h1>
+            
+            <!-- UPDATED TITLE & DESCRIPTION -->
+            <p class="mt-6 max-w-2xl mx-auto text-xl text-gray-400 reveal active leading-relaxed font-light" style="transition-delay: 200ms;">
+                Dynamic <span class="text-white font-semibold">Project / Product Manager</span> with 8+ years in BFSI. 
+                I transform complex banking requirements into <span class="underline decoration-brand-yellow decoration-2 underline-offset-4">production-ready solutions</span>.
+            </p>
+            
+            <div class="mt-12 flex flex-col sm:flex-row justify-center gap-5 reveal active" style="transition-delay: 300ms;">
+                <a href="#projects" class="group px-8 py-4 bg-transparent border border-brand-yellow text-brand-yellow font-semibold hover:bg-brand-yellow hover:text-black transition-all duration-300 rounded-sm flex items-center justify-center gap-2 shadow-[0_0_10px_rgba(255,215,0,0.1)]">
+                    View Projects <i data-lucide="arrow-down" class="w-4 h-4 group-hover:translate-y-1 transition-transform"></i>
+                </a>
+                <a href="#contact" class="group px-8 py-4 bg-white text-black font-semibold hover:bg-gray-200 transition-all duration-300 rounded-sm flex items-center justify-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1">
+                    <i data-lucide="mail" class="w-4 h-4"></i> Work With Me
+                </a>
+            </div>
+
+            <!-- Key Stats Grid -->
+            <div class="mt-24 grid grid-cols-2 md:grid-cols-4 gap-8 border-t border-white/5 pt-12 reveal active" style="transition-delay: 400ms;">
+                <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
+                    <div class="text-4xl font-bold text-brand-yellow">8+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Years Experience</div>
+                </div>
+                <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
+                    <div class="text-4xl font-bold text-white">100+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Screens Developed</div>
+                </div>
+                <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
+                    <div class="text-4xl font-bold text-brand-yellow">9M+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Impacted Users</div>
+                </div>
+                <div class="group p-4 rounded-lg cursor-default hover:bg-white/5 transition-colors">
+                    <div class="text-4xl font-bold text-white">₹80L+</div>
+                    <div class="text-xs text-gray-500 uppercase tracking-widest mt-2 font-semibold">Revenue Generated</div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Trusted By / Organization Logos -->
+    <section class="py-12 bg-black/30 border-y border-white/5 overflow-hidden backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <p class="text-center text-xs font-semibold text-gray-500 mb-8 uppercase tracking-[0.2em]">Experience with Industry Leaders</p>
+            <div class="flex flex-wrap justify-center items-center gap-10 md:gap-16 opacity-80 grayscale hover:grayscale-0 transition-all duration-500">
+                <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="industry-logo brightness-100 invert-0 bg-white p-1 rounded" onerror="this.style.display='none'">
+                <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="industry-logo bg-white p-1 rounded">
+                <img src="https://logo.clearbit.com/sbi.co.in" alt="SBI" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
+                <img src="https://logo.clearbit.com/mahindrafinance.com" alt="Mahindra Finance" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
+                <img src="https://logo.clearbit.com/qualitykiosk.com" alt="Quality Kiosk" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
+                <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                <span class="hidden text-xl font-bold text-gray-400 hover:text-white transition-colors cursor-default">AQM</span>
+            </div>
+        </div>
+    </section>
+
+    <!-- Experience Section -->
+    <section id="experience" class="py-24 relative">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center reveal"><span class="text-brand-yellow">Professional</span> Journey</h2>
+            <p class="text-gray-400 text-center mb-12 text-sm">Click on any role to view detailed contributions.</p>
+            
+            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-brand-yellow/20 before:to-transparent">
+                
+                <!-- Job 1: SMBC -->
+                <div onclick="openModal('smbc-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-yellow/50 bg-brand-black shadow-[0_0_10px_rgba(255,215,0,0.2)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative logo-container">
+                        <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <i data-lucide="briefcase" class="w-5 h-5 text-brand-black hidden"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                            <div>
+                                <h3 class="font-bold text-2xl text-white">Assistant Vice President</h3>
+                                <div class="text-brand-yellow font-medium">SMBC Group | Tokyo, Japan</div>
+                            </div>
+                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Feb 2025 - Present</span>
+                        </div>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
+                                <span>Led "One View" development for 6K+ officers.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
+                                <span>Streamlined backlog across Microservices and DataPower.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Job 2: IBM -->
+                <div onclick="openModal('ibm-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container">
+                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="w-6 h-6 object-contain">
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                            <div>
+                                <h3 class="font-bold text-2xl text-white">Project Manager</h3>
+                                <div class="text-gray-300 font-medium">IBM | Pune, India</div>
+                            </div>
+                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Oct 2021 - Feb 2025</span>
+                        </div>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Managed <strong>$5M Mahindra Finance</strong> project.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Delivered <strong>8 MVPs</strong> on schedule.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Job 3: Quality Kiosk -->
+                <div onclick="openModal('qk-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container animate-pulse-slow">
+                        <img src="https://logo.clearbit.com/qualitykiosk.com" alt="QK" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <i data-lucide="search" class="w-5 h-5 text-brand-black hidden"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                            <div>
+                                <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
+                                <div class="text-gray-300 font-medium">Quality Kiosk | Mumbai</div>
+                            </div>
+                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Jul 2019 - Oct 2021</span>
+                        </div>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Liaised for Internet Banking implementation impacting <strong>9M customers</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Authored 18 FSDs and designed <strong>40 Wireframes</strong>.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                 <!-- Job 4: AQM -->
+                 <div onclick="openModal('aqm-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
+                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container animate-pulse-slow">
+                        <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                        <i data-lucide="bar-chart" class="w-5 h-5 text-brand-black hidden"></i>
+                    </div>
+                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                            <div>
+                                <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
+                                <div class="text-gray-300 font-medium">AQM | Bangalore</div>
+                            </div>
+                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Apr 2018 - Jul 2019</span>
+                        </div>
+                        <ul class="space-y-2">
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Created wireframes for <strong>90 screens</strong>.</span>
+                            </li>
+                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                <span>Spearheaded Internet Banking Migration (2400+ branches).</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="py-24 bg-black/20 backdrop-blur-sm">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-3xl md:text-4xl font-bold mb-4 text-center reveal">Featured <span class="text-brand-yellow">Projects</span></h2>
+            <p class="text-gray-400 text-center mb-16 max-w-2xl mx-auto reveal">Delivering high-impact solutions in Banking & FinTech. Click on a card to view details.</p>
+            
+            <div class="grid md:grid-cols-2 gap-8">
+                
+                <!-- Project 1 -->
+                <div onclick="openModal('smbc')" class="glass-card rounded-xl p-8 flex flex-col h-full reveal group">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow group-hover:bg-brand-yellow group-hover:text-black transition-colors">
+                            <i data-lucide="layout-dashboard" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-yellow border border-brand-yellow/30 px-2 py-1 rounded-full">SMBC</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-yellow transition-colors">One View Microservice</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                        Consolidated customer financial data into a single-click view for 6,000 loan officers. Reduced manual processing from <strong>120 mins to <45 mins</strong>.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Microservices</span>
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Optimization</span>
+                    </div>
+                </div>
+
+                <!-- Project 2 -->
+                <div onclick="openModal('ibm')" class="glass-card rounded-xl p-8 flex flex-col h-full reveal group" style="transition-delay: 100ms;">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow group-hover:bg-brand-yellow group-hover:text-black transition-colors">
+                            <i data-lucide="smartphone" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-yellow border border-brand-yellow/30 px-2 py-1 rounded-full">IBM</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-yellow transition-colors">Mahindra Finance OneApp</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                        End-to-end LOS & LMS development impacting <strong>2 Lakh users/year</strong>. Implemented ACH-Enache for automated payments.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">LOS/LMS</span>
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">FinTech</span>
+                    </div>
+                </div>
+
+                <!-- Project 3 -->
+                <div onclick="openModal('sbi')" class="glass-card rounded-xl p-8 flex flex-col h-full reveal group" style="transition-delay: 200ms;">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow group-hover:bg-brand-yellow group-hover:text-black transition-colors">
+                            <i data-lucide="credit-card" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-yellow border border-brand-yellow/30 px-2 py-1 rounded-full">SBI</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-yellow transition-colors">Yono & TCS Bancs24</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                        Enhanced Quick Pay increasing transaction rate. Yono Cash achieved cardless transactions for millions of users in rural India.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Banking</span>
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Scale</span>
+                    </div>
+                </div>
+
+                <!-- Project 4: Corporation Bank -->
+                <div onclick="openModal('union')" class="glass-card rounded-xl p-8 flex flex-col h-full reveal group" style="transition-delay: 300ms;">
+                    <div class="flex justify-between items-center mb-6">
+                        <div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow group-hover:bg-brand-yellow group-hover:text-black transition-colors">
+                            <i data-lucide="landmark" class="w-6 h-6"></i>
+                        </div>
+                        <span class="text-xs font-bold text-brand-yellow border border-brand-yellow/30 px-2 py-1 rounded-full">UBI</span>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-3 group-hover:text-brand-yellow transition-colors">Corporation (Union) Bank</h3>
+                    <p class="text-gray-400 text-sm mb-6 flex-grow leading-relaxed">
+                        Spearheaded Internet Banking Migration affecting <strong>2400+ branches</strong>. Boosted savings with Flexi Fixed Deposits.
+                    </p>
+                    <div class="flex flex-wrap gap-2 mt-auto">
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Migration</span>
+                        <span class="text-xs bg-black border border-gray-800 text-gray-300 px-2 py-1 rounded">Legacy Modernization</span>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- Skills & Entrepreneurship -->
+    <section id="skills" class="py-24">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="grid md:grid-cols-2 gap-16">
+                
+                <!-- Skills Column (Left) -->
+                <div class="reveal">
+                    <h2 class="text-3xl font-bold mb-8">Key <span class="text-brand-yellow">Skills</span></h2>
+                    
+                    <!-- Expanded Tools & Tech with Animation -->
+                    <div class="mb-10">
+                        <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <i data-lucide="cpu" class="w-4 h-4 text-brand-yellow"></i> Tools & Tech
+                        </h4>
+                        <div class="flex flex-wrap gap-3" id="tools-container">
+                            <!-- Updated chips with reliable animation logic -->
+                            <span style="transition-delay: 0ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Jira & Confluence</span>
+                            <span style="transition-delay: 50ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Asana & Trello</span>
+                            <span style="transition-delay: 100ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">SQL</span>
+                            <span style="transition-delay: 150ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Postman (API)</span>
+                            <span style="transition-delay: 200ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Power BI</span>
+                            <span style="transition-delay: 250ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Miro & Figma</span>
+                            <span style="transition-delay: 300ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">MS Excel</span>
+                             <span style="transition-delay: 350ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Notion</span>
+                            <span style="transition-delay: 400ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Browser Stack</span>
+                             <!-- Added AI & Microservices -->
+                             <span style="transition-delay: 450ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">AI Tools</span>
+                             <span style="transition-delay: 500ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Microservices</span>
+                        </div>
+                    </div>
+
+                    <!-- Expanded Domain Knowledge with Animation -->
+                     <div class="mb-10">
+                        <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <i data-lucide="globe-2" class="w-4 h-4 text-brand-yellow"></i> Banking Domains
+                        </h4>
+                        <div class="flex flex-wrap gap-3">
+                            <span style="transition-delay: 0ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Loan Origination (LOS)</span>
+                            <span style="transition-delay: 50ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Loan Management (LMS)</span>
+                            <span style="transition-delay: 100ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Core Banking</span>
+                            <span style="transition-delay: 150ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Mobile Banking</span>
+                            <span style="transition-delay: 200ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Internet Banking</span>
+                            <span style="transition-delay: 250ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Payments (UPI/ACH)</span>
+                             <!-- Added Digital Rupee & Yes Pay -->
+                             <span style="transition-delay: 300ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Digital Rupee</span>
+                             <span style="transition-delay: 350ms" class="skill-chip px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Yes Pay</span>
+                        </div>
+                    </div>
+
+                    <!-- Detailed Project Management with ANIMATED GRAPH -->
+                    <div class="mb-12">
+                        <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
+                            <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-yellow"></i> Project Management Proficiency
+                        </h4>
+                        <div class="space-y-6">
+                            <!-- Skill 1 -->
+                            <div class="group">
+                                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                                    <span>Agile Scrum / Waterfall / Kanban</span>
+                                    <span class="text-brand-yellow font-bold">Expert (95%)</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                                    <!-- Inline 0% width for JS animation target -->
+                                    <div style="width: 0%" class="bg-brand-yellow h-full rounded-full progress-bar" data-width="95%"></div>
+                                </div>
+                            </div>
+                            
+                            <!-- Skill 2 -->
+                            <div class="group">
+                                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                                    <span>Stakeholder & Client Engagement</span>
+                                    <span class="text-brand-yellow font-bold">Advanced (90%)</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                                    <div style="width: 0%" class="bg-brand-yellow h-full rounded-full progress-bar" data-width="90%"></div>
+                                </div>
+                            </div>
+
+                            <!-- Skill 3 -->
+                            <div class="group">
+                                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                                    <span>Risk Management & Mitigation</span>
+                                    <span class="text-brand-yellow font-bold">Advanced (85%)</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                                    <div style="width: 0%" class="bg-brand-yellow h-full rounded-full progress-bar" data-width="85%"></div>
+                                </div>
+                            </div>
+
+                             <!-- Skill 4 -->
+                             <div class="group">
+                                <div class="flex justify-between text-xs text-gray-400 mb-2">
+                                    <span>Budgeting & Resource Planning</span>
+                                    <span class="text-brand-yellow font-bold">Experienced (80%)</span>
+                                </div>
+                                <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
+                                    <div style="width: 0%" class="bg-brand-yellow h-full rounded-full progress-bar" data-width="80%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Awards & Certifications (Updated Grid with All Items - 3x2 Layout) -->
+                    <h3 class="text-xl font-bold text-white mb-6 border-t border-gray-800 pt-6">Awards & Certifications</h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4" id="awards-section">
+                         <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="award" class="text-brand-yellow w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">Risk-free Delivery</h5>
+                            <p class="text-xs text-gray-400 mt-1">IBM Award for Yono Pay (20k registrations/week).</p>
+                        </div>
+                        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="award" class="text-brand-yellow w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">Delivery Excellence</h5>
+                            <p class="text-xs text-gray-400 mt-1">Quality Kiosk Award for Covid Loan Implementation.</p>
+                        </div>
+                        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="check-circle" class="text-green-500 w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">CSM® Certified</h5>
+                            <p class="text-xs text-gray-400 mt-1">Certified ScrumMaster® from Scrum Alliance.</p>
+                        </div>
+                         <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="book" class="text-blue-400 w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">Retail Banking</h5>
+                            <p class="text-xs text-gray-400 mt-1">NCFM Certification from NSE.</p>
+                        </div>
+                        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="compass" class="text-purple-400 w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">Agile Explorer</h5>
+                            <p class="text-xs text-gray-400 mt-1">IBM Consulting Certification.</p>
+                        </div>
+                        <div class="bg-gray-900/50 p-4 rounded-lg border border-gray-800 hover:border-brand-yellow transition-colors group h-full">
+                            <div class="bg-gray-800 p-2 rounded h-fit w-fit group-hover:bg-brand-yellow/20 transition-colors mb-3"><i data-lucide="file-text" class="text-orange-400 w-5 h-5"></i></div>
+                            <h5 class="font-bold text-white text-sm">Agile PM Fundamentals</h5>
+                            <p class="text-xs text-gray-400 mt-1">Project Management Institute (PMI).</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Entrepreneurial Experience Column (Right) -->
+                <div class="reveal" style="transition-delay: 200ms;">
+                    <h2 class="text-3xl font-bold mb-8">Entrepreneurial <span class="text-brand-yellow">Experience</span></h2>
+
+                    <!-- ITVERSE (Updated) -->
+                    <div onclick="openModal('itverse')" class="glass-card p-6 rounded-lg mb-6 border-l-4 border-brand-yellow hover:translate-x-2 transition-transform cursor-pointer group relative overflow-hidden">
+                        <div class="flex justify-between mb-4 items-start">
+                             <!-- Logo with correct scale and position - Added bg-white wrapper -->
+                             <div class="w-12 h-12 rounded-full bg-white p-1 flex items-center justify-center overflow-hidden border border-gray-200">
+                                 <img src="Untitled design.png" alt="IT Verse" class="w-full h-full object-contain">
+                             </div>
+                            <i data-lucide="arrow-up-right" class="text-gray-400 group-hover:text-brand-yellow transition-colors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-brand-yellow transition-colors mb-1">ITVERSE</h3>
+                        <p class="text-xs text-brand-yellow font-semibold mb-3 uppercase tracking-wide">Future-Ready Agile Education</p>
+                        <p class="text-gray-400 text-sm mb-4">Delivering accessible, future-proof education across <strong>9 countries</strong>.</p>
+                        
+                        <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-xs text-gray-400 border-t border-gray-800 pt-3">
+                            <span class="flex items-center gap-1.5"><i data-lucide="globe" class="w-3 h-3 text-brand-yellow"></i> 12K+ Clients Served</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="users" class="w-3 h-3 text-brand-yellow"></i> 5K+ Active Learners</span>
+                        </div>
+                    </div>
+
+                    <!-- Giri Tara (Green Theme Updated) -->
+                    <div onclick="openModal('giritara')" class="glass-card p-6 rounded-lg mb-6 border-l-4 border-green-600 hover:border-green-400 hover:translate-x-2 transition-all cursor-pointer group relative overflow-hidden">
+                        <div class="flex justify-between mb-4 items-start">
+                             <!-- Logo with correct scale - Added bg-white wrapper -->
+                             <div class="w-12 h-12 rounded-full bg-white border border-green-700 overflow-hidden flex items-center justify-center">
+                                <img src="Giritara.jpg" alt="Giri Tara" class="w-full h-full object-contain">
+                             </div>
+                            <i data-lucide="arrow-up-right" class="text-gray-400 group-hover:text-green-400 transition-colors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-green-400 transition-colors mb-1">Giri Tara</h3>
+                        <p class="text-xs text-green-500 font-semibold mb-3 uppercase tracking-wide">Purposeful Backpacking</p>
+                        <p class="text-gray-400 text-sm mb-4">Organized 600+ trips across 12 states, generating <strong>₹80L+</strong> revenue.</p>
+                        
+                        <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-xs text-gray-400 border-t border-gray-800 pt-3">
+                            <span class="flex items-center gap-1.5"><i data-lucide="map-pin" class="w-3 h-3 text-gray-500 group-hover:text-green-400"></i> 12K+ Travelers</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="briefcase" class="w-3 h-3 text-gray-500 group-hover:text-green-400"></i> 30+ Jobs Created</span>
+                        </div>
+                    </div>
+
+                    <!-- Saaj Shrungar (New) -->
+                    <div onclick="openModal('saaj')" class="glass-card p-6 rounded-lg mb-10 border-l-4 border-pink-500 hover:border-pink-400 hover:translate-x-2 transition-all cursor-pointer group relative overflow-hidden">
+                         <div class="flex justify-between mb-4 items-start">
+                             <!-- Logo with correct scale - Added bg-white wrapper -->
+                             <div class="w-12 h-12 rounded-full bg-white border border-pink-500/30 overflow-hidden flex items-center justify-center">
+                                <img src="Beige and green modern business card.png" alt="Saaj Shrungar" class="w-full h-full object-cover">
+                             </div>
+                            <i data-lucide="arrow-up-right" class="text-gray-400 group-hover:text-pink-400 transition-colors"></i>
+                        </div>
+                        <h3 class="text-xl font-bold text-white group-hover:text-pink-400 transition-colors mb-1">Saaj Shrungar</h3>
+                        <p class="text-xs text-pink-400 font-semibold mb-3 uppercase tracking-wide">Woman-Centric E-commerce</p>
+                        <p class="text-gray-400 text-sm mb-4">Curated fashion brand reflecting trust, quality, and repeat engagement.</p>
+                        
+                        <div class="grid grid-cols-2 gap-y-2 gap-x-4 text-xs text-gray-400 border-t border-gray-800 pt-3">
+                            <span class="flex items-center gap-1.5"><i data-lucide="dollar-sign" class="w-3 h-3 text-pink-400"></i> ₹3L+ Order Value</span>
+                            <span class="flex items-center gap-1.5"><i data-lucide="truck" class="w-3 h-3 text-pink-400"></i> 650+ Deliveries</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer & Contact -->
+    <!-- Changed background to semi-transparent black to match request -->
+    <footer id="contact" class="bg-black/40 backdrop-blur-md border-t border-gray-800 pt-20 pb-10 relative overflow-hidden">
+        <!-- Background Effects -->
+        <div class="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-brand-yellow to-transparent opacity-50"></div>
+        
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid md:grid-cols-2 gap-16 mb-16">
+                
+                <!-- CTA Left -->
+                <div class="text-left">
+                    <h2 class="text-4xl md:text-5xl font-bold mb-6 leading-tight">Ready to <br><span class="text-brand-yellow">Collaborate?</span></h2>
+                    <p class="text-gray-400 mb-8 text-lg max-w-md">Available for Project / Product Management roles, Business Analyst and consulting roles. Let's build something scalable together.</p>
+                    
+                    <div class="flex gap-6">
+                        <a href="mailto:syogeshnk@gmail.com" class="flex items-center gap-3 text-white hover:text-brand-yellow transition-colors">
+                            <div class="p-3 bg-gray-800 rounded-full"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase">Email</div>
+                                <div class="font-medium">syogeshnk@gmail.com</div>
+                            </div>
+                        </a>
+                         <a href="tel:+919969316079" class="flex items-center gap-3 text-white hover:text-brand-yellow transition-colors">
+                            <div class="p-3 bg-gray-800 rounded-full"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                            <div>
+                                <div class="text-xs text-gray-500 uppercase">Phone</div>
+                                <div class="font-medium">+91 9969316079</div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="mt-10 flex gap-4">
+                        <a href="https://www.youtube.com/@itverse1" target="_blank" class="p-3 border border-gray-800 rounded hover:border-[#FF0000] hover:text-[#FF0000] transition-all group">
+                            <i data-lucide="youtube" class="w-6 h-6"></i>
+                        </a>
+                        <a href="https://www.linkedin.com/in/yogeshnk" target="_blank" class="p-3 border border-gray-800 rounded hover:border-[#0077b5] hover:text-[#0077b5] transition-all group">
+                            <i data-lucide="linkedin" class="w-6 h-6"></i>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Contact Form Right -->
+                <div class="glass-card p-8 rounded-xl">
+                    <h3 class="text-xl font-bold mb-6 text-white">Send a Message</h3>
+                    <!-- Safely handle form submission without changing page -->
+                    <form id="contact-form" class="space-y-4" onsubmit="return false;">
+                        <div class="grid grid-cols-2 gap-4">
+                            <input type="text" id="name" placeholder="Name" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all">
+                            <input type="email" id="email" placeholder="Email" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all">
+                        </div>
+                        <textarea id="message" placeholder="Tell me about your project..." rows="4" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all resize-none"></textarea>
+                        <button type="button" onclick="handleContact()" id="contact-submit" class="w-full bg-brand-yellow text-black font-bold py-3 rounded hover:bg-brand-yellowHover transition-all transform hover:scale-[1.02]">
+                            Send Message
+                        </button>
+                    </form>
+                    <!-- Success Message Hidden by Default -->
+                    <div id="success-msg" class="hidden text-center py-8">
+                         <div class="inline-block p-3 rounded-full bg-brand-yellow/20 text-brand-yellow mb-4">
+                            <i data-lucide="check" class="w-8 h-8"></i>
+                        </div>
+                        <h4 class="text-xl font-bold text-white mb-2">Message Sent!</h4>
+                        <p class="text-gray-400">Thank for the message you will get replay in 3 days.</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center text-gray-600 text-sm border-t border-gray-800 pt-8">
+                &copy; 2025 YK. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // --- Lucide Icons ---
+        if (typeof lucide !== 'undefined') {
+            lucide.createIcons();
+        } else {
+            console.error("Lucide library failed to load.");
+        }
+
+        // --- Contact Form Handler ---
+        function handleContact() {
+            const nameField = document.getElementById('name');
+            const emailField = document.getElementById('email');
+            const messageField = document.getElementById('message');
+            
+            // Simple validation
+            if (!nameField.value || !emailField.value || !messageField.value) {
+                alert("Please fill in all fields.");
+                return;
+            }
+
+            const name = nameField.value;
+            const email = emailField.value;
+            const message = messageField.value;
+
+            const btn = document.getElementById('contact-submit');
+            const form = document.getElementById('contact-form');
+            const successMsg = document.getElementById('success-msg');
+
+            // Disable button immediately
+            btn.disabled = true;
+            btn.innerText = "Sending...";
+
+            // Simulate sending process and trigger mailto
+            setTimeout(() => {
+                // Create hidden link to trigger mailto
+                const subject = `Portfolio Contact from ${name}`;
+                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+                
+                // Use window.location.href instead of creating a link to prevent popup blockers/blank pages
+                window.location.href = `mailto:syogeshnk@gmail.com?subject=${subject}&body=${body}`;
+
+                // Show Success Message & Hide Form
+                form.style.display = 'none';
+                successMsg.classList.remove('hidden');
+                // Re-init icons for the checkmark in success msg
+                lucide.createIcons();
+            }, 1000);
+        }
+
+        // --- Data Objects for Modals ---
+        const projectsData = {
+            'smbc': {
+                theme: 'yellow',
+                company: 'SMBC Group',
+                title: 'One View Microservice',
+                iconHTML: '<i data-lucide="layout-dashboard" class="w-6 h-6"></i>',
+                description: 'A critical digital transformation initiative replacing manual legacy processes. We developed a Microservice that consolidates all customer financial data into a single-click view for 6,000+ loan officers. This system replaced a tedious 120-minute manual data-gathering process with a fast (<45 sec) sync/async data call.',
+                metrics: [
+                    'Reduced processing time from 120 mins to <45 mins.',
+                    'Boosted application efficiency by 60%.',
+                    'Scaled to support 6,000+ active loan officers.'
+                ],
+                tags: ['Microservices', 'Java', 'React', 'Optimization', 'Banking']
+            },
+            'ibm': {
+                theme: 'yellow',
+                company: 'IBM',
+                title: 'Mahindra Finance OneApp (Fin2Go)',
+                iconHTML: '<i data-lucide="smartphone" class="w-6 h-6"></i>',
+                description: 'Managed the end-to-end development of a comprehensive Loan Origination (LOS) and Loan Management System (LMS). This $5M project involved 400+ screens and 9 continuous MVP releases. Key features included automated payment recovery (ACH-Enache) and service ticket management.',
+                metrics: [
+                    'Impacted 2 Lakh users per year.',
+                    'Registered 7,000 users for ACH-Enache in the first month.',
+                    'Delivered 8 MVPs on strict timelines.'
+                ],
+                tags: ['Mobile App', 'LOS/LMS', 'Agile', 'FinTech', 'Payment Gateway']
+            },
+            'sbi': {
+                theme: 'yellow',
+                company: 'SBI',
+                title: 'Yono & TCS Bancs24',
+                iconHTML: '<i data-lucide="credit-card" class="w-6 h-6"></i>',
+                description: 'Worked on India\'s largest digital banking platform. Enhanced Yono Quick Pay transactions and launched the revolutionary "Yono Cash" for cardless ATM withdrawals. Also initiated biometric login security for transactions under ₹5000.',
+                metrics: [
+                    'Yono Cash: 5 Million daily transactions average.',
+                    'Yono Pay: 20,000 weekly registrations achieved.',
+                    'Reduced system downtime by 20% through proactive monitoring.'
+                ],
+                tags: ['Digital Banking', 'Scale', 'Security', 'UPI', 'Biometrics']
+            },
+            'union': {
+                theme: 'yellow',
+                company: 'Union (Corporation) Bank',
+                title: 'Internet Banking Migration',
+                iconHTML: '<i data-lucide="landmark" class="w-6 h-6"></i>',
+                description: 'Spearheaded a massive Internet Banking Migration affecting 2400+ branches. The project focused on modernizing the legacy banking infrastructure, automating SMS notifications, and introducing new customer-centric products like Flexi Fixed Deposits.',
+                metrics: [
+                    'Impacted 2400+ branches nationwide.',
+                    'Automated 80+ types of SMS notifications.',
+                    'Attracted 5K new customers in a month via Flexi FD launch.'
+                ],
+                tags: ['Migration', 'Legacy Modernization', 'Core Banking', 'Automation']
+            },
+             'itverse': {
+                theme: 'yellow',
+                company: 'Entrepreneurship',
+                title: 'ITVERSE - Agile Education Platform',
+                // Added bg-white class to inner container for visibility
+                iconHTML: '<div class="w-12 h-12 rounded-full bg-white p-1 overflow-hidden flex items-center justify-center border border-gray-200"><img src="Untitled design.png" class="w-full h-full object-contain"></div>',
+                description: 'A future-ready education platform focused on Agile and Scrum mastery. Built a global community across 9 countries, providing accessible, high-quality learning resources.',
+                metrics: [
+                    '12,000+ clients served with 5,000+ active learners.',
+                    '55+ YouTube videos & 4 Udemy Courses created.',
+                    '10,000+ Telegram members & 900+ paid community members.'
+                ],
+                tags: ['EdTech', 'Community Building', 'Content Creation', 'Agile Coaching']
+            },
+            'giritara': {
+                theme: 'green',
+                company: 'Entrepreneurship',
+                title: 'Giri Tara - Backpacking & Travel',
+                // Added bg-white class to inner container for visibility
+                iconHTML: '<div class="w-12 h-12 rounded-full bg-white border border-green-500 overflow-hidden flex items-center justify-center"><img src="Giritara.jpg" class="w-full h-full object-contain"></div>',
+                description: 'Founded a travel venture focused on purposeful backpacking and grassroots travel across India. Created sustainable employment opportunities for locals while offering unique travel experiences.',
+                metrics: [
+                    'Organized 600+ trips across 12 Indian states.',
+                    'Served 12,000+ travelers, generating ₹80L+ in revenue.',
+                    'Created employment for 30+ individuals (guides, logistics).'
+                ],
+                tags: ['Travel', 'Operations', 'Logistics', 'Sustainable Business']
+            },
+            'saaj': {
+                theme: 'pink',
+                company: 'Entrepreneurship',
+                title: 'Saaj Shrungar - E-commerce',
+                // Added bg-white class to inner container for visibility
+                iconHTML: '<div class="w-12 h-12 rounded-full bg-white border border-pink-400 overflow-hidden flex items-center justify-center"><img src="Beige and green modern business card.png" class="w-full h-full object-cover"></div>',
+                description: 'A woman-centric e-commerce brand offering curated fashion catalogs. Focused on quality, trust, and building a loyal customer base through platforms like Meesho.',
+                metrics: [
+                    '₹3,00,000+ in total order value.',
+                    '650+ successful deliveries across India.',
+                    '28+ curated catalogs with 225+ positive reviews.'
+                ],
+                tags: ['E-commerce', 'Product Management', 'Customer Experience', 'Digital Sales']
+            },
+            // Experience Data (Pop-up Content)
+             'smbc-job': {
+                theme: 'yellow',
+                company: 'SMBC Group | Tokyo, Japan',
+                title: 'Assistant Vice President',
+                iconHTML: '<div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow"><i data-lucide="briefcase" class="w-6 h-6"></i></div>',
+                description: 'As Assistant Vice President, led critical digital transformation initiatives for SMBC Group. Focused on modernizing legacy systems to improve efficiency and reduce operational risk.',
+                metrics: [
+                    'Led "One View" development for 6K+ loan officers, reducing process time from 120 to 45 minutes.',
+                    'Streamlined backlog across Microservices and DataPower, cutting dev time from 185 to 104 days.',
+                    'Resolved 300+ App-Sec observations raised by RBI during Yes Bank investment, coordinating with 8 departments.'
+                ],
+                tags: ['Leadership', 'Digital Transformation', 'Banking', 'Process Optimization']
+            },
+            'ibm-job': {
+                theme: 'yellow',
+                company: 'IBM | Pune, India',
+                title: 'Project Manager',
+                iconHTML: '<div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow"><i data-lucide="building-2" class="w-6 h-6"></i></div>',
+                description: 'Managed high-value projects for major financial clients like Mahindra Finance and SBI. Responsible for end-to-end delivery, budget management, and stakeholder communication.',
+                metrics: [
+                    'Managed $5M Mahindra Finance App project (400+ screens, 9 MVPs).',
+                    'Delivered 8 MVPs on schedule through rigorous risk analysis and mitigation.',
+                    'Created comprehensive Project Plans, managed budgets, and ensured seamless stakeholder engagement.'
+                ],
+                tags: ['Project Management', 'Budgeting', 'Risk Analysis', 'Stakeholder Management']
+            },
+            'qk-job': {
+                theme: 'yellow',
+                company: 'Quality Kiosk Technologies | Mumbai',
+                title: 'Business Analyst',
+                iconHTML: '<div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow"><i data-lucide="search" class="w-6 h-6"></i></div>',
+                description: 'Bridged the gap between business needs and technical solutions for large-scale banking implementations. Specialized in requirement gathering and wireframing.',
+                metrics: [
+                    'Liaised for Internet Banking implementation impacting 9M customers.',
+                    'Authored 18 FSDs (Functional Spec Documents) and designed 40 detailed Wireframes.',
+                    'Coordinated communication between 8 different teams & 30+ stakeholders to ensure alignment.'
+                ],
+                tags: ['Business Analysis', 'Requirement Gathering', 'Documentation', 'Wireframing']
+            },
+            'aqm-job': {
+                theme: 'yellow',
+                company: 'AQM | Bangalore',
+                title: 'Business Analyst',
+                iconHTML: '<div class="p-3 bg-brand-yellow/10 rounded-lg text-brand-yellow"><i data-lucide="bar-chart" class="w-6 h-6"></i></div>',
+                description: 'Facilitated software adoption and process improvements in the banking sector. Played a key role in training and migration projects.',
+                metrics: [
+                    'Created wireframes for 90 screens using Figma & Balsamiq.',
+                    'Spearheaded Internet Banking Migration for Corporation Bank affecting 2400+ branches.',
+                    'Trained 3000+ bankers on new software implementation.',
+                    'Automated 80+ SMS notifications for enhanced customer communication.'
+                ],
+                tags: ['Training', 'Migration', 'Automation', 'Process Improvement']
+            }
+        };
+
+        function openModal(id) {
+            const modal = document.getElementById('project-modal');
+            const modalWrapper = document.getElementById('modal-wrapper');
+            const data = projectsData[id];
+            
+            if(!data) return;
+
+            // Populate Data
+            const companyEl = document.getElementById('modal-company');
+            companyEl.innerText = data.company;
+            
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-description').innerText = data.description;
+            
+            // Icon/Image
+            const iconContainer = document.getElementById('modal-icon');
+            iconContainer.innerHTML = data.iconHTML;
+
+            // Apply Theme Colors
+            // Reset classes first
+            modalWrapper.className = "bg-[#111] border w-full max-w-3xl rounded-xl overflow-hidden shadow-2xl relative max-h-[90vh] overflow-y-auto transition-colors duration-300";
+            companyEl.className = "text-xs font-bold border px-2 py-1 rounded-full mb-2 inline-block";
+            const impactTitle = document.getElementById('modal-impact-title');
+            impactTitle.className = "font-bold text-sm uppercase tracking-wider mb-3";
+            const closeBtn = modalWrapper.querySelector('button');
+            
+            if (data.theme === 'green') {
+                modalWrapper.classList.add('border-green-500/50');
+                companyEl.classList.add('text-green-500', 'border-green-500/30');
+                impactTitle.classList.add('text-green-500');
+                closeBtn.classList.replace('hover:text-brand-yellow', 'hover:text-green-500');
+            } else if (data.theme === 'pink') {
+                modalWrapper.classList.add('border-pink-500/50');
+                companyEl.classList.add('text-pink-500', 'border-pink-500/30');
+                impactTitle.classList.add('text-pink-500');
+                closeBtn.classList.replace('hover:text-brand-yellow', 'hover:text-pink-500');
+            } else {
+                // Default Yellow
+                modalWrapper.classList.add('border-brand-yellow/20');
+                companyEl.classList.add('text-brand-yellow', 'border-brand-yellow/30');
+                impactTitle.classList.add('text-brand-yellow');
+                closeBtn.classList.replace('hover:text-green-500', 'hover:text-brand-yellow'); // Reset from green
+                closeBtn.classList.replace('hover:text-pink-500', 'hover:text-brand-yellow'); // Reset from pink
+            }
+
+            // Metrics List
+            const metricsList = document.getElementById('modal-metrics');
+            let checkColorClass = "text-brand-yellow";
+            if (data.theme === 'green') checkColorClass = "text-green-500";
+            if (data.theme === 'pink') checkColorClass = "text-pink-500";
+            
+            metricsList.innerHTML = data.metrics.map(m => `<li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 ${checkColorClass} mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
+            
+            // Tags
+            const tagsContainer = document.getElementById('modal-tags');
+            tagsContainer.innerHTML = data.tags.map(t => `<span class="text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5">${t}</span>`).join('');
+
+            // Re-init icons for list
+            lucide.createIcons();
+
+            // Show
+            modal.classList.remove('hidden');
+            document.body.style.overflow = 'hidden'; // Prevent background scroll
+        }
+
+        function closeModal() {
+            const modal = document.getElementById('project-modal');
+            modal.classList.add('hidden');
+            document.body.style.overflow = '';
+        }
+
+        // Close on Escape key
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // --- Scroll Animations (Intersection Observer) ---
+        const observerOptions = {
+            threshold: 0.2, // Trigger a bit earlier
+            rootMargin: "0px"
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                const target = entry.target;
+                
+                if (entry.isIntersecting) {
+                    target.classList.add('active');
+                    // Vibration effect for awards section
+                    if (target.id === 'awards-section' || target.closest('#awards-section')) {
+                        const cards = target.querySelectorAll('.group');
+                        cards.forEach((card, index) => {
+                            setTimeout(() => {
+                                card.classList.add('vibrate-active');
+                                // Remove class after animation ends to allow re-trigger if needed or just clean up
+                                setTimeout(() => {
+                                    card.classList.remove('vibrate-active');
+                                }, 1200); // 0.4s * 3 iterations = 1.2s
+                            }, index * 100); // Slight stagger
+                        });
+                    }
+                    
+                    // Trigger Progress Bars (Animate TO width)
+                    const progressBars = target.querySelectorAll('.progress-bar');
+                    progressBars.forEach(bar => {
+                        const width = bar.getAttribute('data-width');
+                        if(width) {
+                            // Small timeout to ensure CSS transition catches the change
+                            setTimeout(() => {
+                                bar.style.width = width;
+                            }, 100);
+                        }
+                    });
+                } else {
+                    // Optional: Reset animation when out of view to replay it
+                     target.classList.remove('active');
+                     const progressBars = target.querySelectorAll('.progress-bar');
+                     progressBars.forEach(bar => {
+                         bar.style.width = '0%';
+                     });
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.reveal, #awards-section').forEach((section) => {
+            observer.observe(section);
+        });
+
+        // --- Navbar Effect ---
+        window.addEventListener('scroll', () => {
+            const nav = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                nav.classList.add('shadow-lg');
+                nav.classList.replace('bg-black/80', 'bg-black/95');
+            } else {
+                nav.classList.remove('shadow-lg');
+                nav.classList.replace('bg-black/95', 'bg-black/80');
+            }
+        });
+
+        // --- Three.js 3D Particle Animation ---
+        function initThreeJS() {
+            const container = document.getElementById('canvas-container');
+            if (!container) return;
+
+            const scene = new THREE.Scene();
+            const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            const renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setPixelRatio(window.devicePixelRatio); // Sharpness
+            container.appendChild(renderer.domElement);
+
+            // 1. Ambient Particles (Starfield)
+            const particlesGeometry = new THREE.BufferGeometry();
+            const particlesCount = 700;
+            const posArray = new Float32Array(particlesCount * 3);
+
+            for(let i = 0; i < particlesCount * 3; i++) {
+                posArray[i] = (Math.random() - 0.5) * 20; // Spread out
+            }
+
+            particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+            const particlesMaterial = new THREE.PointsMaterial({
+                size: 0.02,
+                color: 0xFFD700, // Brand Yellow
+                transparent: true,
+                opacity: 0.6,
+            });
+            const starField = new THREE.Points(particlesGeometry, particlesMaterial);
+            scene.add(starField);
+
+            // 2. Structured Network Sphere (The "Global/Tech" feel) - Right Side
+            const sphereGeometry = new THREE.IcosahedronGeometry(2, 1);
+            const wireframe = new THREE.WireframeGeometry(sphereGeometry);
+            const lineMaterial = new THREE.LineBasicMaterial({ 
+                color: 0x444444, // Dark Gray Lines
+                transparent: true,
+                opacity: 0.3
+            });
+            const networkSphere = new THREE.LineSegments(wireframe, lineMaterial);
+            scene.add(networkSphere);
+            
+            // Add particles to sphere vertices to make it look like nodes
+            const sphereParticlesMat = new THREE.PointsMaterial({
+                size: 0.04,
+                color: 0xFFD700,
+                transparent: true,
+                opacity: 0.8
+            });
+            const sphereNodes = new THREE.Points(sphereGeometry, sphereParticlesMat);
+            networkSphere.add(sphereNodes); 
+
+            // Position the sphere
+            networkSphere.position.x = 3; 
+            networkSphere.position.y = 0;
+            
+            // 3. Lightning Bolt Effect (Left Side)
+            // We will create a line geometry that changes vertices every frame when active
+            const boltMaxPoints = 20;
+            const boltGeometry = new THREE.BufferGeometry();
+            const boltPositions = new Float32Array(boltMaxPoints * 3);
+            boltGeometry.setAttribute('position', new THREE.BufferAttribute(boltPositions, 3));
+            
+            const boltMaterial = new THREE.LineBasicMaterial({
+                color: 0xFFFFFF, // White hot
+                transparent: true,
+                opacity: 0
+            });
+            
+            const lightningBolt = new THREE.Line(boltGeometry, boltMaterial);
+            scene.add(lightningBolt);
+
+            camera.position.z = 5;
+
+            // Mouse Interaction
+            let mouseX = 0;
+            let mouseY = 0;
+            let targetX = 0;
+            let targetY = 0;
+
+            const windowHalfX = window.innerWidth / 2;
+            const windowHalfY = window.innerHeight / 2;
+
+            document.addEventListener('mousemove', (event) => {
+                mouseX = (event.clientX - windowHalfX);
+                mouseY = (event.clientY - windowHalfY);
+            });
+
+            // Click Listener for Lightning
+            let isLightningActive = false;
+            let lightningDuration = 0;
+
+            document.addEventListener('click', () => {
+                if (!isLightningActive) {
+                     isLightningActive = true;
+                     lightningDuration = 0.1 + Math.random() * 0.2; // Short flash
+                     boltMaterial.opacity = 0.8 + Math.random() * 0.2;
+                     
+                     // Generate zig-zag path on the left
+                     let startX = -4; // Start on left side
+                     let startY = 3;
+                     let currentPos = new THREE.Vector3(startX, startY, 0);
+                     
+                     const positions = lightningBolt.geometry.attributes.position.array;
+                     for (let i = 0; i < boltMaxPoints; i++) {
+                         positions[i * 3] = currentPos.x;
+                         positions[i * 3 + 1] = currentPos.y;
+                         positions[i * 3 + 2] = currentPos.z;
+                         
+                         // Random walk down
+                         currentPos.x += (Math.random() - 0.5) * 1.0;
+                         currentPos.y -= Math.random() * 1.0;
+                         currentPos.z += (Math.random() - 0.5) * 1.0;
+                     }
+                     lightningBolt.geometry.attributes.position.needsUpdate = true;
+                }
+            });
+
+            // Animation Loop
+            const clock = new THREE.Clock();
+
+            const tick = () => {
+                targetX = mouseX * 0.001;
+                targetY = mouseY * 0.001;
+
+                const elapsedTime = clock.getElapsedTime();
+
+                // Rotate Starfield slowly
+                starField.rotation.y += 0.0005;
+
+                // Rotate Network Sphere (Right)
+                networkSphere.rotation.x += 0.001;
+                networkSphere.rotation.y += 0.002;
+                networkSphere.position.y = Math.sin(elapsedTime * 0.5) * 0.2;
+
+                // Interaction
+                starField.rotation.x += 0.05 * (targetY - starField.rotation.x);
+                starField.rotation.y += 0.05 * (targetX - starField.rotation.y);
+
+                // Lightning Logic (Fade out)
+                if (isLightningActive) {
+                    boltMaterial.opacity -= 0.05;
+                    if (boltMaterial.opacity <= 0) {
+                        isLightningActive = false;
+                        boltMaterial.opacity = 0;
+                    }
+                }
+
+                renderer.render(scene, camera);
+                window.requestAnimationFrame(tick);
+            }
+
+            tick();
+
+            // Resize
+            window.addEventListener('resize', () => {
+                camera.aspect = window.innerWidth / window.innerHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+        }
+
+        // Initialize Three.js once DOM is ready
+        window.onload = initThreeJS;
+
+    </script>
+</body>
+</html>
