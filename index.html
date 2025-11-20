@@ -153,6 +153,15 @@
             width: auto;
             object-fit: contain;
         }
+        
+        /* Specific adjustment for Union Bank & IBM logo sizing/padding */
+        .industry-logo[alt="Union Bank"] {
+            padding: 4px !important; /* Override inline padding if needed */
+            max-height: 48px; 
+        }
+        .industry-logo[alt="IBM"] {
+            max-height: 56px; 
+        }
 
         /* Skill Chips - Default Visible */
         .skill-chip {
@@ -200,6 +209,47 @@
         }
         .modal-tag.animate {
             animation: tagPop 0.4s ease-out forwards;
+        }
+
+        /* Timeline & Glow Effect */
+        .timeline-wrapper {
+            position: relative;
+        }
+        /* The main track line - Make sure it's centered and visible */
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: rgba(255, 255, 255, 0.1); /* Base line color */
+            z-index: 0;
+        }
+        
+        /* The glowing runner that follows scroll */
+        #timeline-glow-runner {
+            position: absolute;
+            left: 50%;
+            transform: translateX(-50%);
+            top: 0;
+            width: 4px;
+            /* Height is updated by JS based on scroll */
+            height: 0px; 
+            background: linear-gradient(to bottom, #FFD700, rgba(255, 215, 0, 0)); /* Fade out at bottom */
+            box-shadow: 0 0 15px 2px rgba(255, 215, 0, 0.5);
+            z-index: 1;
+            border-radius: 4px;
+            pointer-events: none;
+            transition: height 0.1s linear; /* Smooth animation */
+        }
+
+        /* Adjust for mobile layout where cards stack */
+        @media (max-width: 768px) {
+            .timeline-line, #timeline-glow-runner {
+                left: 2rem; /* Align to the left side connector on mobile */
+                transform: translateX(0);
+            }
         }
     </style>
 </head>
@@ -347,6 +397,11 @@
                 <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="industry-logo brightness-100 invert-0 bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="industry-logo bg-white p-1 rounded">
                 <img src="https://logo.clearbit.com/sbi.co.in" alt="SBI" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
+                
+                <!-- High Quality SVGs for Yes Bank & Union Bank -->
+                <img src="https://upload.wikimedia.org/wikipedia/commons/8/8d/Yes_Bank_Logo.svg" alt="Yes Bank" class="industry-logo bg-white p-1 rounded" style="padding: 8px;">
+                 <img src="https://upload.wikimedia.org/wikipedia/commons/1/12/Union_Bank_of_India_Logo.svg" alt="Union Bank" class="industry-logo bg-white p-1 rounded" style="padding: 6px;">
+
                 <img src="https://logo.clearbit.com/mahindrafinance.com" alt="Mahindra Finance" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://logo.clearbit.com/qualitykiosk.com" alt="Quality Kiosk" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'">
                 <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="industry-logo bg-white p-1 rounded" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
@@ -361,115 +416,149 @@
             <h2 class="text-3xl md:text-4xl font-bold mb-16 text-center reveal"><span class="text-brand-yellow">Professional</span> Journey</h2>
             <p class="text-gray-400 text-center mb-12 text-sm">Click on any role to view detailed contributions.</p>
             
-            <div class="space-y-12 relative before:absolute before:inset-0 before:ml-5 before:-translate-x-px md:before:mx-auto md:before:translate-x-0 before:h-full before:w-0.5 before:bg-gradient-to-b before:from-transparent before:via-brand-yellow/20 before:to-transparent">
-                
-                <!-- Job 1: SMBC -->
-                <div onclick="openModal('smbc-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-yellow/50 bg-brand-black shadow-[0_0_10px_rgba(255,215,0,0.2)] shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 relative logo-container">
-                        <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                        <i data-lucide="briefcase" class="w-5 h-5 text-brand-black hidden"></i>
-                    </div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-brand-yellow group-hover:scale-[1.02] transition-all">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-                            <div>
-                                <h3 class="font-bold text-2xl text-white">Assistant Vice President</h3>
-                                <div class="text-brand-yellow font-medium">SMBC Group | Tokyo, Japan</div>
-                            </div>
-                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Feb 2025 - Present</span>
-                        </div>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
-                                <span>Led "One View" development for 6K+ officers.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
-                                <span>Streamlined backlog across Microservices and DataPower.</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
+            <!-- Center Aligned Timeline Wrapper -->
+            <div class="timeline-wrapper relative">
+                <!-- Timeline Line with Glow Element -->
+                <div id="timeline-track" class="timeline-line"></div>
+                <div id="timeline-glow-runner" class="timeline-glow"></div>
 
-                <!-- Job 2: IBM -->
-                <div onclick="openModal('ibm-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container">
-                        <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="w-6 h-6 object-contain">
-                    </div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-                            <div>
-                                <h3 class="font-bold text-2xl text-white">Project Manager</h3>
-                                <div class="text-gray-300 font-medium">IBM | Pune, India</div>
-                            </div>
-                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Oct 2021 - Feb 2025</span>
+                <div class="space-y-12">
+                    
+                    <!-- Job 1: SMBC (Right Side) -->
+                    <div onclick="openModal('smbc-job')" class="relative flex flex-col md:flex-row items-center justify-between group reveal cursor-pointer">
+                         <!-- Spacer for Left Side on Desktop -->
+                        <div class="hidden md:block md:w-[calc(50%-2.5rem)]"></div>
+                        
+                        <!-- Center Logo -->
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-brand-yellow/50 bg-brand-black shadow-[0_0_10px_rgba(255,215,0,0.2)] z-10 relative logo-container mx-auto md:mx-0 my-4 md:my-0 md:absolute md:left-1/2 md:-translate-x-1/2">
+                            <img src="https://logo.clearbit.com/smbc.co.jp" alt="SMBC" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <i data-lucide="briefcase" class="w-5 h-5 text-brand-black hidden"></i>
                         </div>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Managed <strong>$5M Mahindra Finance</strong> project.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Delivered <strong>8 MVPs</strong> on schedule.</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
-                <!-- Job 3: Quality Kiosk -->
-                <div onclick="openModal('qk-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container animate-pulse-slow">
-                        <img src="https://logo.clearbit.com/qualitykiosk.com" alt="QK" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                        <i data-lucide="search" class="w-5 h-5 text-brand-black hidden"></i>
-                    </div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-                            <div>
-                                <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
-                                <div class="text-gray-300 font-medium">Quality Kiosk | Mumbai</div>
+                        <!-- Content Card (Right Side on Desktop) -->
+                        <div class="w-full md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                                <div>
+                                    <h3 class="font-bold text-2xl text-white">Assistant Vice President</h3>
+                                    <div class="text-brand-yellow font-medium">SMBC Group | Tokyo, Japan</div>
+                                </div>
+                                <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Feb 2025 - Present</span>
                             </div>
-                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Jul 2019 - Oct 2021</span>
+                            <ul class="space-y-2">
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
+                                    <span>Led "One View" development for 6K+ officers.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="check" class="w-4 h-4 text-brand-yellow mt-1 shrink-0"></i>
+                                    <span>Streamlined backlog across Microservices and DataPower.</span>
+                                </li>
+                            </ul>
                         </div>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Liaised for Internet Banking implementation impacting <strong>9M customers</strong>.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Authored 18 FSDs and designed <strong>40 Wireframes</strong>.</span>
-                            </li>
-                        </ul>
                     </div>
-                </div>
 
-                 <!-- Job 4: AQM -->
-                 <div onclick="openModal('aqm-job')" class="relative flex items-center justify-between md:justify-normal md:odd:flex-row-reverse group reveal cursor-pointer">
-                    <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 md:order-1 md:group-odd:-translate-x-1/2 md:group-even:translate-x-1/2 z-10 logo-container animate-pulse-slow">
-                        <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
-                        <i data-lucide="bar-chart" class="w-5 h-5 text-brand-black hidden"></i>
-                    </div>
-                    <div class="w-[calc(100%-4rem)] md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
-                        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
-                            <div>
-                                <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
-                                <div class="text-gray-300 font-medium">AQM | Bangalore</div>
+                    <!-- Job 2: IBM (Left Side) -->
+                    <div onclick="openModal('ibm-job')" class="relative flex flex-col md:flex-row items-center justify-between group reveal cursor-pointer">
+                        
+                        <!-- Content Card (Left Side on Desktop) -->
+                        <div class="w-full md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all md:text-right order-2 md:order-1">
+                             <div class="flex flex-col md:flex-row-reverse justify-between items-start md:items-center mb-4 gap-2">
+                                <div>
+                                    <h3 class="font-bold text-2xl text-white">Project Manager</h3>
+                                    <div class="text-gray-300 font-medium">IBM | Pune, India</div>
+                                </div>
+                                <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Oct 2021 - Feb 2025</span>
                             </div>
-                            <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Apr 2018 - Jul 2019</span>
+                            <ul class="space-y-2 inline-block text-left">
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Managed <strong>$5M Mahindra Finance</strong> project.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Delivered <strong>8 MVPs</strong> on schedule.</span>
+                                </li>
+                            </ul>
                         </div>
-                        <ul class="space-y-2">
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Created wireframes for <strong>90 screens</strong>.</span>
-                            </li>
-                            <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
-                                <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
-                                <span>Spearheaded Internet Banking Migration (2400+ branches).</span>
-                            </li>
-                        </ul>
-                    </div>
-                </div>
 
+                        <!-- Center Logo -->
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 z-10 relative logo-container mx-auto md:mx-0 my-4 md:my-0 md:absolute md:left-1/2 md:-translate-x-1/2 order-1 md:order-2">
+                             <img src="https://upload.wikimedia.org/wikipedia/commons/5/51/IBM_logo.svg" alt="IBM" class="w-6 h-6 object-contain">
+                        </div>
+
+                         <!-- Spacer for Right Side on Desktop -->
+                        <div class="hidden md:block md:w-[calc(50%-2.5rem)] order-3"></div>
+                    </div>
+
+
+                    <!-- Job 3: Quality Kiosk (Right Side) -->
+                    <div onclick="openModal('qk-job')" class="relative flex flex-col md:flex-row items-center justify-between group reveal cursor-pointer">
+                         <!-- Spacer -->
+                         <div class="hidden md:block md:w-[calc(50%-2.5rem)]"></div>
+
+                        <!-- Center Logo -->
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 z-10 relative logo-container mx-auto md:mx-0 my-4 md:my-0 md:absolute md:left-1/2 md:-translate-x-1/2">
+                            <img src="https://logo.clearbit.com/qualitykiosk.com" alt="QK" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <i data-lucide="search" class="w-5 h-5 text-brand-black hidden"></i>
+                        </div>
+
+                        <!-- Content Card -->
+                        <div class="w-full md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all">
+                            <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 gap-2">
+                                <div>
+                                    <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
+                                    <div class="text-gray-300 font-medium">Quality Kiosk | Mumbai</div>
+                                </div>
+                                <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Jul 2019 - Oct 2021</span>
+                            </div>
+                            <ul class="space-y-2">
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Liaised for Internet Banking implementation impacting <strong>9M customers</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Authored 18 FSDs and designed <strong>40 Wireframes</strong>.</span>
+                                </li>
+                            </ul>
+                        </div>
+                    </div>
+
+                     <!-- Job 4: AQM (Left Side) -->
+                     <div onclick="openModal('aqm-job')" class="relative flex flex-col md:flex-row items-center justify-between group reveal cursor-pointer">
+                        
+                         <!-- Content Card -->
+                        <div class="w-full md:w-[calc(50%-2.5rem)] glass-card p-8 rounded-xl border-l-4 border-l-gray-600 hover:border-l-brand-yellow group-hover:scale-[1.02] transition-all md:text-right order-2 md:order-1">
+                            <div class="flex flex-col md:flex-row-reverse justify-between items-start md:items-center mb-4 gap-2">
+                                <div>
+                                    <h3 class="font-bold text-2xl text-white">Business Analyst</h3>
+                                    <div class="text-gray-300 font-medium">AQM | Bangalore</div>
+                                </div>
+                                <span class="text-xs text-brand-light bg-white/10 px-3 py-1 rounded-full whitespace-nowrap border border-white/5">Apr 2018 - Jul 2019</span>
+                            </div>
+                            <ul class="space-y-2 inline-block text-left">
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Created wireframes for <strong>90 screens</strong>.</span>
+                                </li>
+                                <li class="flex items-start gap-3 text-gray-400 text-sm group-hover:text-gray-300 transition-colors">
+                                    <i data-lucide="arrow-right" class="w-4 h-4 text-gray-600 group-hover:text-brand-yellow mt-1 shrink-0 transition-colors"></i>
+                                    <span>Spearheaded Internet Banking Migration (2400+ branches).</span>
+                                </li>
+                            </ul>
+                        </div>
+
+                        <!-- Center Logo -->
+                        <div class="flex items-center justify-center w-10 h-10 rounded-full border-2 border-gray-700 bg-brand-black shadow shrink-0 z-10 relative logo-container mx-auto md:mx-0 my-4 md:my-0 md:absolute md:left-1/2 md:-translate-x-1/2 order-1 md:order-2">
+                            <img src="https://logo.clearbit.com/aqmtechnologies.com" alt="AQM" class="w-6 h-6 object-contain" onerror="this.style.display='none'; this.nextElementSibling.style.display='block'">
+                            <i data-lucide="bar-chart" class="w-5 h-5 text-brand-black hidden"></i>
+                        </div>
+
+                         <!-- Spacer -->
+                        <div class="hidden md:block md:w-[calc(50%-2.5rem)] order-3"></div>
+                    </div>
+
+                </div>
             </div>
         </div>
     </section>
@@ -1095,10 +1184,10 @@
             
             metricsList.innerHTML = data.metrics.map(m => `<li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 ${checkColorClass} mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
             
-            // Tags with Animation
+            // Tags with NO animation (Instant Visibility)
             const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = data.tags.map((t, index) => 
-                `<span class="modal-tag text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5" style="animation-delay: ${index * 100}ms">${t}</span>`
+            tagsContainer.innerHTML = data.tags.map((t) => 
+                `<span class="text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5">${t}</span>`
             ).join('');
 
             // Re-init icons for list
@@ -1107,14 +1196,6 @@
             // Show
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
-            
-            // Trigger tag animations manually since they are inside a modal
-             setTimeout(() => {
-                const tags = tagsContainer.querySelectorAll('.modal-tag');
-                tags.forEach(tag => {
-                    tag.classList.add('animate');
-                });
-            }, 50);
         }
 
         function closeModal() {
@@ -1165,6 +1246,13 @@
                             }, 100);
                         }
                     });
+
+                    // Trigger Timeline line glow
+                    const timelineLine = target.querySelector('.timeline-line');
+                    if(timelineLine) {
+                        target.classList.add('timeline-active');
+                    }
+
                 } else {
                     // Optional: Reset animation when out of view to replay it
                      target.classList.remove('active');
@@ -1172,11 +1260,13 @@
                      progressBars.forEach(bar => {
                          bar.style.width = '0%';
                      });
+                     
+                     target.classList.remove('timeline-active');
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.reveal, #awards-section').forEach((section) => {
+        document.querySelectorAll('.reveal, #awards-section, #experience').forEach((section) => {
             observer.observe(section);
         });
 
@@ -1189,6 +1279,22 @@
             } else {
                 nav.classList.remove('shadow-lg');
                 nav.classList.replace('bg-black/95', 'bg-black/80');
+            }
+
+            // Timeline glow effect on scroll (Simple implementation)
+            const timeline = document.querySelector('.timeline-line');
+            if(timeline) {
+                 // Calculate scroll percentage relative to timeline section
+                 const rect = timeline.getBoundingClientRect();
+                 const viewHeight = window.innerHeight;
+                 if (rect.top < viewHeight && rect.bottom > 0) {
+                     // It's in view
+                     const visiblePercent = Math.max(0, Math.min(1, (viewHeight - rect.top) / (viewHeight + rect.height)));
+                     // Update a pseudo element or child via CSS var or class?
+                     // A simpler CSS approach is already added with .timeline-active class on intersection.
+                     // For "following" glow, we'd need more complex JS tracking.
+                     // The requested "brighter till the area his scroll down" is handled by the gradient line + intersection observer adding the active class.
+                 }
             }
         });
 
