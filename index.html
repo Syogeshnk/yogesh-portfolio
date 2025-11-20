@@ -31,7 +31,9 @@
                     animation: {
                         'fade-in-up': 'fadeInUp 0.6s ease-out forwards',
                         'pulse-slow': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
-                        'vibrate': 'vibrate 0.3s linear infinite both', // Vibration animation
+                        'vibrate': 'vibrate 0.3s linear infinite both', 
+                        'pop-in': 'popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards',
+                        'tag-pop': 'tagPop 0.4s ease-out forwards',
                     },
                     keyframes: {
                         fadeInUp: {
@@ -45,6 +47,15 @@
                             '60%': { transform: 'translate(2px, 2px)' },
                             '80%': { transform: 'translate(2px, -2px)' },
                             '100%': { transform: 'translate(0)' }
+                        },
+                        popIn: {
+                            '0%': { opacity: '0', transform: 'scale(0.8) translateY(10px)' },
+                            '100%': { opacity: '1', transform: 'scale(1) translateY(0)' },
+                        },
+                        tagPop: {
+                            '0%': { opacity: '0', transform: 'scale(0.5)' },
+                            '70%': { transform: 'scale(1.1)' },
+                            '100%': { opacity: '1', transform: 'scale(1)' }
                         }
                     }
                 }
@@ -181,6 +192,15 @@
         .vibrate-active {
             animation: vibrate 0.4s linear 3; /* Vibrate 3 times then stop */
         }
+
+        /* Modal Tag Animation */
+        .modal-tag {
+            opacity: 0;
+            transform: scale(0.8);
+        }
+        .modal-tag.animate {
+            animation: tagPop 0.4s ease-out forwards;
+        }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-yellow selection:text-black">
@@ -274,6 +294,7 @@
                 <span class="text-brand-yellow text-xs font-bold tracking-[0.2em] uppercase">Certified Scrum Master®</span>
             </div>
             
+            <!-- UPDATED NAME TO "Yogesh K" -->
             <h1 class="text-5xl md:text-8xl font-bold tracking-tight mb-8 reveal active" style="transition-delay: 100ms;">
                 Yogesh <span class="relative inline-block">
                     <span class="relative z-10 text-transparent bg-clip-text bg-gradient-to-br from-brand-yellow via-[#fffec4] to-white">K</span>
@@ -756,6 +777,7 @@
                     <p class="text-gray-400 mb-8 text-lg max-w-md">Available for Project / Product Management roles, Business Analyst and consulting roles. Let's build something scalable together.</p>
                     
                     <div class="flex gap-6">
+                        <!-- Opens default mail client -->
                         <a href="mailto:syogeshnk@gmail.com" class="flex items-center gap-3 text-white hover:text-brand-yellow transition-colors">
                             <div class="p-3 bg-gray-800 rounded-full"><i data-lucide="mail" class="w-5 h-5"></i></div>
                             <div>
@@ -763,6 +785,7 @@
                                 <div class="font-medium">syogeshnk@gmail.com</div>
                             </div>
                         </a>
+                         <!-- Opens default phone dialer -->
                          <a href="tel:+919969316079" class="flex items-center gap-3 text-white hover:text-brand-yellow transition-colors">
                             <div class="p-3 bg-gray-800 rounded-full"><i data-lucide="phone" class="w-5 h-5"></i></div>
                             <div>
@@ -791,6 +814,9 @@
                             <input type="text" id="name" placeholder="Name" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all">
                             <input type="email" id="email" placeholder="Email" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all">
                         </div>
+                        <!-- Added Mobile Number Field -->
+                        <input type="tel" id="mobile" placeholder="Mobile Number" class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all">
+                        
                         <textarea id="message" placeholder="Tell me about your project..." rows="4" required class="form-input w-full px-4 py-3 rounded bg-gray-900 border border-gray-800 text-sm focus:border-brand-yellow focus:ring-1 focus:ring-brand-yellow outline-none transition-all resize-none"></textarea>
                         <button type="button" onclick="handleContact()" id="contact-submit" class="w-full bg-brand-yellow text-black font-bold py-3 rounded hover:bg-brand-yellowHover transition-all transform hover:scale-[1.02]">
                             Send Message
@@ -825,6 +851,7 @@
         function handleContact() {
             const nameField = document.getElementById('name');
             const emailField = document.getElementById('email');
+            const mobileField = document.getElementById('mobile');
             const messageField = document.getElementById('message');
             
             // Simple validation
@@ -835,6 +862,7 @@
 
             const name = nameField.value;
             const email = emailField.value;
+            const mobile = mobileField.value;
             const message = messageField.value;
 
             const btn = document.getElementById('contact-submit');
@@ -849,7 +877,7 @@
             setTimeout(() => {
                 // Create hidden link to trigger mailto
                 const subject = `Portfolio Contact from ${name}`;
-                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
+                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AMobile: ${mobile}%0D%0A%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
                 
                 // Use window.location.href instead of creating a link to prevent popup blockers/blank pages
                 window.location.href = `mailto:syogeshnk@gmail.com?subject=${subject}&body=${body}`;
@@ -939,7 +967,7 @@
                 description: 'Founded a travel venture focused on purposeful backpacking and grassroots travel across India. Created sustainable employment opportunities for locals while offering unique travel experiences.',
                 metrics: [
                     'Organized 600+ trips across 12 Indian states.',
-                    'Served 18,000+ travelers, generating ₹80L+ in revenue.',
+                    'Served 18K+ travelers, generating ₹80L+ in revenue.',
                     'Created employment for 30+ individuals (guides, logistics).'
                 ],
                 tags: ['Travel', 'Operations', 'Logistics', 'Sustainable Business']
@@ -1067,9 +1095,11 @@
             
             metricsList.innerHTML = data.metrics.map(m => `<li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 ${checkColorClass} mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
             
-            // Tags
+            // Tags with Animation
             const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = data.tags.map(t => `<span class="text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5">${t}</span>`).join('');
+            tagsContainer.innerHTML = data.tags.map((t, index) => 
+                `<span class="modal-tag text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5" style="animation-delay: ${index * 100}ms">${t}</span>`
+            ).join('');
 
             // Re-init icons for list
             lucide.createIcons();
@@ -1077,6 +1107,14 @@
             // Show
             modal.classList.remove('hidden');
             document.body.style.overflow = 'hidden'; // Prevent background scroll
+            
+            // Trigger tag animations manually since they are inside a modal
+             setTimeout(() => {
+                const tags = tagsContainer.querySelectorAll('.modal-tag');
+                tags.forEach(tag => {
+                    tag.classList.add('animate');
+                });
+            }, 50);
         }
 
         function closeModal() {
@@ -1322,6 +1360,4 @@
 
     </script>
 </body>
-
 </html>
-
