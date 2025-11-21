@@ -8,7 +8,7 @@
     <link rel="canonical" href="https://yogesh-kotkar.com">
 
     <!-- Content Security Policy (CSP) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com;">
 
     <!-- Open Graph (OG) Tags -->
     <meta property="og:title" content="Yogesh K | Project / Product Manager & CSM®">
@@ -38,11 +38,10 @@
     <!-- Defer non-critical scripts for performance -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     
     <script>
         tailwind.config = {
+            darkMode: 'class',
             theme: {
                 extend: {
                     colors: {
@@ -95,6 +94,31 @@
         ::-webkit-scrollbar-track { background: #121212; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #FFD700; }
+        
+        /* Light Mode */
+        .light-mode { background-color: #ffffff !important; color: #0f172a !important; }
+        .light-mode ::-webkit-scrollbar-track { background: #f1f5f9; }
+        .light-mode ::-webkit-scrollbar-thumb { background: #94a3b8; }
+        .light-mode .text-white { color: #0f172a !important; }
+        .light-mode .text-gray-300 { color: #334155 !important; }
+        .light-mode .text-gray-400 { color: #475569 !important; }
+        .light-mode .text-gray-500 { color: #64748b !important; }
+        .light-mode .text-brand-yellow { color: #b45309 !important; }
+        .light-mode .border-brand-yellow { border-color: #b45309 !important; }
+        .light-mode .bg-brand-yellow { background-color: #fbbf24 !important; }
+        .light-mode .glass-card { background: rgba(255, 255, 255, 0.85) !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; }
+        .light-mode #navbar { background-color: rgba(255, 255, 255, 0.95) !important; border-bottom-color: #e2e8f0 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
+        .light-mode .bg-white\/5 { background-color: #f8fafc !important; }
+        .light-mode .bg-white\/10 { background-color: #f1f5f9 !important; }
+        .light-mode .bg-black\/20, .light-mode .bg-black\/30, .light-mode .bg-black\/40 { background-color: #f8fafc !important; }
+        .light-mode .timeline-line { background: #cbd5e1 !important; }
+        .light-mode .chat-window, .light-mode #recruiter-modal > div, .light-mode #modal-wrapper { background: #ffffff !important; border-color: #e2e8f0 !important; color: #0f172a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important; }
+        .light-mode .chat-msg.user { background: #0f172a; color: white !important; }
+        .light-mode .chat-msg.ai { background: #fffbeb; color: #b45309 !important; border-color: #fcd34d; }
+        .light-mode textarea, .light-mode input { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
+        .light-mode #preloader { background: #ffffff !important; }
+        .light-mode #preloader .loading-text { color: #18181b !important; }
+        .light-mode #canvas-container { opacity: 0.1; filter: invert(1); }
 
         /* 3D Canvas */
         #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 1; pointer-events: none; transition: opacity 0.3s ease; }
@@ -121,6 +145,8 @@
         }
         #back-to-top:hover { background: #FFD700; color: black; transform: translateY(-5px); }
         #back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
+        .light-mode #back-to-top { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); color: #18181b; }
+        .light-mode #back-to-top:hover { background: #b45309; color: white; }
 
         /* Utils */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
@@ -143,24 +169,194 @@
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-         /* Yog Avatar Styles */
+        /* Voice Visualizer - Removed in favor of Avatar */
+        
+        /* --- NEW YOG ROBOT STYLES --- */
         .yog-avatar {
-            width: 40px; height: 40px; background: #111; border: 2px solid #FFD700; border-radius: 50%; position: relative;
-            display: flex; justify-content: center; align-items: center; box-shadow: 0 0 10px rgba(255, 215, 0, 0.3); transition: all 0.3s;
+            width: 48px;
+            height: 48px;
+            position: relative;
+            display: flex;
+            justify-content: center;
+            align-items: flex-end;
+            /* Default Dancing State */
+            animation: robot-dance 1s infinite ease-in-out alternate;
         }
-        .yog-eyes { display: flex; gap: 8px; position: absolute; top: 12px; }
-        .yog-eye { width: 4px; height: 4px; background: #FFD700; border-radius: 50%; animation: blink-eyes 4s infinite; }
-        .yog-mouth { width: 12px; height: 2px; background: #FFD700; position: absolute; bottom: 10px; border-radius: 2px; transition: height 0.1s; }
-        .yog-avatar.speaking .yog-mouth { animation: talk 0.2s infinite alternate; }
-        .yog-avatar.speaking { box-shadow: 0 0 15px rgba(255, 215, 0, 0.6); }
-        @keyframes blink-eyes { 0%, 96%, 100% { transform: scaleY(1); } 98% { transform: scaleY(0.1); } }
-        @keyframes talk { 0% { height: 2px; bottom: 10px; border-radius: 2px; } 100% { height: 8px; bottom: 7px; border-radius: 4px; } }
+        
+        /* Antenna */
+        .yog-antenna {
+            position: absolute;
+            top: -6px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 8px;
+            background: #888;
+            transition: all 0.3s;
+        }
+        .yog-antenna::before {
+            content: '';
+            position: absolute;
+            top: -4px;
+            left: -2px;
+            width: 6px;
+            height: 6px;
+            background: #FFD700;
+            border-radius: 50%;
+            animation: antenna-pulse 2s infinite;
+        }
+
+        /* Head */
+        .yog-face {
+            width: 44px;
+            height: 34px;
+            background: #222;
+            border: 2px solid #555;
+            border-radius: 8px;
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 4px;
+            box-shadow: inset 0 0 10px #000;
+            transition: all 0.3s;
+        }
+        .light-mode .yog-face {
+            background: #e2e2e2;
+            border-color: #999;
+        }
+
+        /* Eyes Container */
+        .yog-eyes {
+            display: flex;
+            gap: 10px;
+            margin-top: 4px;
+        }
+        
+        /* Individual Eye */
+        .yog-eye {
+            width: 8px;
+            height: 8px;
+            background: #00ffcc; /* Cyan for retro screen look */
+            border-radius: 50%; /* Circle default */
+            box-shadow: 0 0 5px #00ffcc;
+            transition: all 0.3s;
+        }
+        
+        /* Mouth */
+        .yog-mouth {
+            width: 16px;
+            height: 2px;
+            background: #00ffcc;
+            border-radius: 2px;
+            transition: all 0.2s;
+            margin-bottom: 4px;
+        }
+
+        /* --- ANIMATIONS & STATES --- */
+
+        /* 1. Dancing (Idle) */
+        @keyframes robot-dance {
+            0% { transform: translateY(0) rotate(-3deg); }
+            100% { transform: translateY(-2px) rotate(3deg); }
+        }
+        @keyframes antenna-pulse {
+            0%, 100% { background: #FFD700; box-shadow: 0 0 0 #FFD700; }
+            50% { background: #fff; box-shadow: 0 0 8px #FFD700; }
+        }
+
+        /* 2. Speaking State */
+        .yog-avatar.speaking .yog-mouth {
+            height: 6px;
+            border-radius: 50%; /* O shape */
+            animation: robot-talk 0.15s infinite alternate;
+            background: #ffff00;
+            box-shadow: 0 0 5px #ffff00;
+        }
+        .yog-avatar.speaking .yog-eye {
+            background: #ffff00;
+            box-shadow: 0 0 5px #ffff00;
+            height: 2px; /* Squinting slightly while talking */
+            border-radius: 2px;
+        }
+        @keyframes robot-talk {
+            from { width: 12px; height: 2px; }
+            to { width: 14px; height: 8px; }
+        }
+
+        /* 3. Laughing State */
+        .yog-avatar.laughing {
+            animation: robot-laugh 0.1s infinite;
+        }
+        .yog-avatar.laughing .yog-face {
+            border-color: #FFD700;
+        }
+        .yog-avatar.laughing .yog-eye {
+            background: #FFD700;
+            height: 4px;
+            width: 8px;
+            border-radius: 0;
+            clip-path: polygon(0 50%, 50% 0, 100% 50%); /* Triangle/Squint eye ^ */
+        }
+        .yog-avatar.laughing .yog-mouth {
+            height: 8px;
+            border-radius: 0 0 10px 10px; /* Smile */
+            width: 18px;
+        }
+        @keyframes robot-laugh {
+            0% { transform: translateY(0) rotate(0); }
+            50% { transform: translateY(-2px) rotate(-2deg); }
+            100% { transform: translateY(0) rotate(2deg); }
+        }
+
+        /* 4. Sad State */
+        .yog-avatar.sad {
+            animation: none; /* Stop dancing */
+            transform: translateY(4px) rotate(-5deg); /* Droop */
+        }
+        .yog-avatar.sad .yog-antenna {
+            transform: translateX(-50%) rotate(45deg); /* Droopy antenna */
+        }
+        .yog-avatar.sad .yog-antenna::before {
+            background: #3366ff; /* Blue light */
+            box-shadow: none;
+            animation: none;
+        }
+        .yog-avatar.sad .yog-face {
+            border-color: #3366ff;
+        }
+        .yog-avatar.sad .yog-eye {
+            background: #3366ff;
+            box-shadow: 0 0 5px #3366ff;
+            height: 4px;
+            border-radius: 50% 50% 0 0; /* Sad eyes */
+            transform: rotate(-10deg); /* Slanted */
+        }
+        .yog-avatar.sad .yog-eye:last-child {
+            transform: rotate(10deg);
+        }
+        .yog-avatar.sad .yog-mouth {
+            background: #3366ff;
+            width: 12px;
+            height: 4px;
+            border-radius: 50% 50% 0 0; /* Frown */
+            margin-top: 2px;
+        }
 
         .industry-logo { max-height: 48px; width: auto; object-fit: contain; }
         .industry-logo[alt="Union Bank"] { padding: 4px !important; max-height: 48px; }
         .industry-logo[alt="IBM"] { max-height: 48px; }
         .logo-container { background: white; padding: 4px; border-radius: 50%; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; overflow: hidden; }
         .logo-container:hover { transform: scale(1.1); }
+
+        /* Marquee */
+        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; width: 100%; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
+        .marquee-content { display: inline-block; animation: marquee 40s linear infinite; }
+        .marquee-item { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0 1.5rem; color: #9ca3af; font-weight: 500; font-size: 1rem; transition: color 0.3s; }
+        .marquee-item:hover { color: #FFD700; transform: scale(1.1); }
+        .light-mode .marquee-item { color: #475569; }
+        .light-mode .marquee-item:hover { color: #b45309; }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-yellow selection:text-black">
@@ -215,9 +411,17 @@
                         <a href="#skills" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">Skills</a>
                         <a href="#testimonials" class="hover:text-brand-yellow transition-colors px-3 py-2 rounded-md text-sm font-medium text-gray-300">Testimonials</a>
                         <a href="#contact" class="bg-brand-yellow text-black hover:bg-brand-yellowHover px-5 py-2 rounded-sm text-sm font-bold transition-all transform hover:scale-105 shadow-[0_0_15px_rgba(255,215,0,0.3)]">Contact Me</a>
+                        <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-brand-yellow transition-colors" title="Toggle Dark/Light Mode" aria-label="Toggle Theme">
+                            <i data-lucide="sun" class="w-5 h-5 hidden dark-icon"></i>
+                            <i data-lucide="moon" class="w-5 h-5 light-icon"></i>
+                        </button>
                     </div>
                 </div>
                 <div class="-mr-2 flex md:hidden items-center gap-4">
+                    <button onclick="toggleTheme()" class="p-2 rounded-full hover:bg-white/10 text-gray-300 hover:text-brand-yellow transition-colors" aria-label="Toggle Theme">
+                            <i data-lucide="sun" class="w-5 h-5 hidden dark-icon"></i>
+                            <i data-lucide="moon" class="w-5 h-5 light-icon"></i>
+                    </button>
                     <button onclick="document.getElementById('mobile-menu').classList.toggle('hidden')" type="button" class="inline-flex items-center justify-center p-2 rounded-md text-gray-400 hover:text-white hover:bg-gray-700 focus:outline-none" aria-label="Open Menu">
                         <i data-lucide="menu" class="h-6 w-6"></i>
                     </button>
@@ -773,11 +977,6 @@
                             </div>
                         </a>
                     </div>
-                    <div class="mt-8">
-                         <button onclick="Calendly.initPopupWidget({url: 'https://calendly.com/syogeshnk'});return false;" class="group px-8 py-4 bg-brand-yellow text-black font-bold hover:bg-brand-yellowHover transition-all duration-300 rounded-sm flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-fit">
-                             <i data-lucide="calendar" class="w-5 h-5"></i> Schedule a Call
-                        </button>
-                    </div>
                     <div class="mt-10 flex gap-4">
                         <a href="https://www.youtube.com/@itverse1" target="_blank" rel="noopener noreferrer" class="p-3 border border-gray-800 rounded hover:border-[#FF0000] hover:text-[#FF0000] transition-all group" aria-label="YouTube Profile">
                             <i data-lucide="youtube" class="w-6 h-6"></i>
@@ -823,12 +1022,16 @@
     <div id="chat-window" class="chat-window">
         <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-lg">
             <div class="flex items-center gap-3">
+                <!-- New Yog Robot Structure -->
                 <div id="yog-avatar" class="yog-avatar">
-                    <div class="yog-eyes">
-                        <div class="yog-eye"></div>
-                        <div class="yog-eye"></div>
+                    <div class="yog-antenna"></div>
+                    <div class="yog-face">
+                        <div class="yog-eyes">
+                            <div class="yog-eye"></div>
+                            <div class="yog-eye"></div>
+                        </div>
+                        <div class="yog-mouth"></div>
                     </div>
-                    <div class="yog-mouth"></div>
                 </div>
                 <div>
                     <h3 class="font-bold text-white text-sm">Chat with Yog</h3>
@@ -915,37 +1118,6 @@
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
         
-        // --- Dark/Light Mode Logic ---
-        function toggleTheme() {
-            const body = document.body;
-            body.classList.toggle('light-mode');
-            const isLight = body.classList.contains('light-mode');
-            localStorage.setItem('theme', isLight ? 'light' : 'dark');
-            
-            const sunIcons = document.querySelectorAll('.dark-icon'); 
-            const moonIcons = document.querySelectorAll('.light-icon'); 
-            
-            if (isLight) {
-                 moonIcons.forEach(el => el.classList.remove('hidden'));
-                 sunIcons.forEach(el => el.classList.add('hidden'));
-            } else {
-                 moonIcons.forEach(el => el.classList.add('hidden'));
-                 sunIcons.forEach(el => el.classList.remove('hidden'));
-            }
-        }
-        
-        (function initTheme() {
-            const savedTheme = localStorage.getItem('theme');
-            if (savedTheme === 'light') {
-                toggleTheme(); 
-            } else {
-                 const sunIcons = document.querySelectorAll('.dark-icon');
-                 const moonIcons = document.querySelectorAll('.light-icon');
-                 moonIcons.forEach(el => el.classList.add('hidden'));
-                 sunIcons.forEach(el => el.classList.remove('hidden'));
-            }
-        })();
-
         // --- Gemini AI Integration ---
         // 🔴 CRITICAL: PASTE YOUR GOOGLE GEMINI API KEY BELOW
         // You can get one here: https://aistudio.google.com/app/apikey
@@ -1101,7 +1273,37 @@
             
             // Trigger Yog to Speak
             speakResponse(reply);
+            
+            // Simulate Emotion Analysis (Simple Keyword Check)
+            const lowerReply = reply.toLowerCase();
+            const avatar = document.getElementById('yog-avatar');
+            
+            if (lowerReply.includes('haha') || lowerReply.includes('happy') || lowerReply.includes('great') || lowerReply.includes('love')) {
+                avatar.classList.add('laughing');
+                setTimeout(() => avatar.classList.remove('laughing'), 3000); // Laugh for 3s
+            } else if (lowerReply.includes('sorry') || lowerReply.includes('unfortunately') || lowerReply.includes('sad') || lowerReply.includes('apologize')) {
+                avatar.classList.add('sad');
+                setTimeout(() => avatar.classList.remove('sad'), 4000); // Sad for 4s
+            }
         }
+        
+        // --- Yog Random Mood Simulator (For Demo Purposes) ---
+        setInterval(() => {
+            const avatar = document.getElementById('yog-avatar');
+            // Only do random stuff if not currently speaking or active
+            if (!avatar.classList.contains('speaking') && !document.getElementById('chat-window').classList.contains('hidden')) {
+                const rand = Math.random();
+                if (rand > 0.95) { // 5% chance
+                    // Trigger Laugh
+                    avatar.classList.add('laughing');
+                    setTimeout(() => avatar.classList.remove('laughing'), 2000);
+                } else if (rand < 0.05) { // 5% chance
+                    // Trigger Sad/Bored
+                    avatar.classList.add('sad');
+                    setTimeout(() => avatar.classList.remove('sad'), 3000);
+                }
+            }
+        }, 5000); // Check every 5 seconds
 
         function openRecruiterModal() {
             document.getElementById('recruiter-modal').classList.remove('hidden');
