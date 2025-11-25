@@ -8,7 +8,7 @@
     <link rel="canonical" href="https://yogesh-kotkar.com">
 
     <!-- Content Security Policy (CSP) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://assets.calendly.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://assets.calendly.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com; frame-src 'self' https://calendly.com;">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com;">
 
     <!-- Open Graph (OG) Tags -->
     <meta property="og:title" content="Yogesh K | Project / Product Manager & CSM®">
@@ -38,9 +38,6 @@
     <!-- Defer non-critical scripts for performance -->
     <script src="https://unpkg.com/lucide@latest" defer></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r134/three.min.js" defer></script>
-    <!-- Calendly -->
-    <link href="https://assets.calendly.com/assets/external/widget.css" rel="stylesheet">
-    <script src="https://assets.calendly.com/assets/external/widget.js" type="text/javascript" async></script>
     
     <script>
         tailwind.config = {
@@ -97,31 +94,6 @@
         ::-webkit-scrollbar-track { background: #121212; }
         ::-webkit-scrollbar-thumb { background: #333; border-radius: 4px; }
         ::-webkit-scrollbar-thumb:hover { background: #FFD700; }
-        
-        /* Light Mode */
-        .light-mode { background-color: #ffffff !important; color: #0f172a !important; }
-        .light-mode ::-webkit-scrollbar-track { background: #f1f5f9; }
-        .light-mode ::-webkit-scrollbar-thumb { background: #94a3b8; }
-        .light-mode .text-white { color: #0f172a !important; }
-        .light-mode .text-gray-300 { color: #334155 !important; }
-        .light-mode .text-gray-400 { color: #475569 !important; }
-        .light-mode .text-gray-500 { color: #64748b !important; }
-        .light-mode .text-brand-yellow { color: #b45309 !important; }
-        .light-mode .border-brand-yellow { border-color: #b45309 !important; }
-        .light-mode .bg-brand-yellow { background-color: #fbbf24 !important; }
-        .light-mode .glass-card { background: rgba(255, 255, 255, 0.85) !important; border-color: #e2e8f0 !important; box-shadow: 0 4px 20px rgba(0,0,0,0.05) !important; }
-        .light-mode #navbar { background-color: rgba(255, 255, 255, 0.95) !important; border-bottom-color: #e2e8f0 !important; box-shadow: 0 2px 10px rgba(0,0,0,0.05); }
-        .light-mode .bg-white\/5 { background-color: #f8fafc !important; }
-        .light-mode .bg-white\/10 { background-color: #f1f5f9 !important; }
-        .light-mode .bg-black\/20, .light-mode .bg-black\/30, .light-mode .bg-black\/40 { background-color: #f8fafc !important; }
-        .light-mode .timeline-line { background: #cbd5e1 !important; }
-        .light-mode .chat-window, .light-mode #recruiter-modal > div, .light-mode #modal-wrapper { background: #ffffff !important; border-color: #e2e8f0 !important; color: #0f172a !important; box-shadow: 0 20px 60px rgba(0,0,0,0.15) !important; }
-        .light-mode .chat-msg.user { background: #0f172a; color: white !important; }
-        .light-mode .chat-msg.ai { background: #fffbeb; color: #b45309 !important; border-color: #fcd34d; }
-        .light-mode textarea, .light-mode input { background: #ffffff !important; color: #0f172a !important; border-color: #cbd5e1 !important; }
-        .light-mode #preloader { background: #ffffff !important; }
-        .light-mode #preloader .loading-text { color: #18181b !important; }
-        .light-mode #canvas-container { opacity: 0.1; filter: invert(1); }
 
         /* 3D Canvas */
         #canvas-container { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; opacity: 1; pointer-events: none; transition: opacity 0.3s ease; }
@@ -148,8 +120,6 @@
         }
         #back-to-top:hover { background: #FFD700; color: black; transform: translateY(-5px); }
         #back-to-top.visible { opacity: 1; visibility: visible; transform: translateY(0); }
-        .light-mode #back-to-top { background: rgba(0,0,0,0.1); border-color: rgba(0,0,0,0.1); color: #18181b; }
-        .light-mode #back-to-top:hover { background: #b45309; color: white; }
 
         /* Utils */
         .reveal { opacity: 0; transform: translateY(30px); transition: all 0.8s ease-out; }
@@ -172,110 +142,66 @@
         .typing-dot:nth-child(2) { animation-delay: -0.16s; }
         @keyframes bounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
 
-        /* --- NEW E-BOT STYLE AVATAR --- */
+        /* Voice Visualizer - Removed in favor of Avatar */
+        
+        /* Yog Avatar Styles */
         .yog-avatar {
-            width: 50px;
+            width: 40px;
             height: 40px;
+            background: #111;
+            border: 2px solid #FFD700;
+            border-radius: 50%;
             position: relative;
             display: flex;
             justify-content: center;
             align-items: center;
-            /* Idle Float */
-            animation: bot-float 3s ease-in-out infinite;
-        }
-
-        .bot-head-container {
-            display: flex;
-            gap: 2px;
-            transform-origin: bottom center;
-            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        /* The Eye Housing (Binocular look) */
-        .bot-eye-housing {
-            width: 20px;
-            height: 20px;
-            background: #222;
-            border: 2px solid #777;
-            border-radius: 40% 40% 45% 45%; /* Rounded square shape */
-            position: relative;
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            box-shadow: inset 0 0 4px #000;
+            box-shadow: 0 0 10px rgba(255, 215, 0, 0.3);
             transition: all 0.3s;
         }
         
-        /* The Glass Lens */
-        .bot-lens {
-            width: 14px;
-            height: 14px;
-            background: #000;
-            border-radius: 50%;
-            position: relative;
-            transition: all 0.3s;
-            overflow: hidden;
-        }
-
-        /* The Glowing Pupil */
-        .bot-pupil {
-            width: 6px;
-            height: 6px;
-            background: #00ffcc; /* Default Cyan */
-            border-radius: 50%;
+        /* Eyes */
+        .yog-eyes {
+            display: flex;
+            gap: 8px;
             position: absolute;
-            top: 50%; left: 50%;
-            transform: translate(-50%, -50%);
-            box-shadow: 0 0 6px #00ffcc;
-            transition: all 0.2s;
-            animation: bot-blink 4s infinite;
+            top: 12px;
         }
-
-        /* --- MOOD STATES --- */
-
-        /* Happy / Smile */
-        .yog-avatar.happy .bot-head-container { transform: translateY(-2px) scale(1.05); }
-        .yog-avatar.happy .bot-eye-housing { border-color: #FFD700; transform: rotate(0deg); }
-        .yog-avatar.happy .bot-pupil { background: #FFD700; box-shadow: 0 0 8px #FFD700; width: 8px; height: 8px; }
-        /* Create "Squint" effect by scaling lens Y */
-        .yog-avatar.happy .bot-lens { transform: scaleY(0.7); } 
-
-        /* Sad */
-        .yog-avatar.sad { animation: none; } /* Stop floating */
-        .yog-avatar.sad .bot-head-container { transform: rotate(-15deg) translateY(5px); } /* Droop head */
-        .yog-avatar.sad .bot-eye-housing { border-color: #3b82f6; transform: rotate(15deg); } /* Droop eyes outward */
-        .yog-avatar.sad .bot-eye-housing:last-child { transform: rotate(-15deg); }
-        .yog-avatar.sad .bot-pupil { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; top: 70%; width: 5px; height: 5px; } /* Look down */
-
-        /* Crying (Sad + Tears) */
-        .yog-avatar.cry .bot-head-container { transform: rotate(-15deg) translateY(5px); }
-        .yog-avatar.cry .bot-eye-housing { border-color: #3b82f6; }
-        .yog-avatar.cry .bot-pupil { background: #3b82f6; top: 70%; }
-        .yog-avatar.cry::after, .yog-avatar.cry::before {
-            content: '';
-            position: absolute;
-            width: 4px; height: 4px;
-            background: #60a5fa; /* Tear color */
-            border-radius: 50%;
-            opacity: 0;
-        }
-        .yog-avatar.cry::after { top: 30px; left: 12px; animation: bot-cry 1s infinite; }
-        .yog-avatar.cry::before { top: 30px; right: 12px; animation: bot-cry 1s infinite 0.5s; }
-
-        /* Speaking */
-        .yog-avatar.speaking .bot-head-container { transform: scale(1.05); }
-        .yog-avatar.speaking .bot-pupil {
+        .yog-eye {
+            width: 4px;
+            height: 4px;
             background: #FFD700;
-            box-shadow: 0 0 8px #FFD700;
-            animation: bot-speak-pulse 0.2s infinite alternate; /* Rapid pulse */
+            border-radius: 50%;
+            animation: blink-eyes 4s infinite;
         }
 
-        /* Keyframes */
-        @keyframes bot-float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
-        @keyframes bot-blink { 0%, 96% { transform: translate(-50%, -50%) scaleY(1); } 98% { transform: translate(-50%, -50%) scaleY(0.1); } 100% { transform: translate(-50%, -50%) scaleY(1); } }
-        @keyframes bot-speak-pulse { from { width: 5px; height: 5px; opacity: 0.8; } to { width: 9px; height: 9px; opacity: 1; } }
-        @keyframes bot-cry { 0% { opacity: 1; transform: translateY(0); } 100% { opacity: 0; transform: translateY(15px); } }
+        /* Mouth */
+        .yog-mouth {
+            width: 12px;
+            height: 2px;
+            background: #FFD700;
+            position: absolute;
+            bottom: 10px;
+            border-radius: 2px;
+            transition: height 0.1s;
+        }
+
+        /* Talking Animation */
+        .yog-avatar.speaking .yog-mouth {
+            animation: talk 0.2s infinite alternate;
+        }
+        .yog-avatar.speaking {
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.6);
+        }
+
+        @keyframes blink-eyes {
+            0%, 96%, 100% { transform: scaleY(1); }
+            98% { transform: scaleY(0.1); }
+        }
+
+        @keyframes talk {
+            0% { height: 2px; bottom: 10px; border-radius: 2px; }
+            100% { height: 8px; bottom: 7px; border-radius: 4px; }
+        }
 
         .industry-logo { max-height: 48px; width: auto; object-fit: contain; }
         .industry-logo[alt="Union Bank"] { padding: 4px !important; max-height: 48px; }
@@ -283,13 +209,42 @@
         .logo-container { background: white; padding: 4px; border-radius: 50%; box-shadow: 0 0 15px rgba(255, 255, 255, 0.1); display: flex; align-items: center; justify-content: center; transition: transform 0.3s ease; overflow: hidden; }
         .logo-container:hover { transform: scale(1.1); }
 
-        /* Marquee */
-        .marquee-container { overflow: hidden; white-space: nowrap; position: relative; width: 100%; mask-image: linear-gradient(to right, transparent, black 5%, black 95%, transparent); }
-        .marquee-content { display: inline-block; animation: marquee 40s linear infinite; }
-        .marquee-item { display: inline-flex; align-items: center; gap: 0.5rem; margin: 0 1.5rem; color: #9ca3af; font-weight: 500; font-size: 1rem; transition: color 0.3s; }
-        .marquee-item:hover { color: #FFD700; transform: scale(1.1); }
-        .light-mode .marquee-item { color: #475569; }
-        .light-mode .marquee-item:hover { color: #b45309; }
+        /* Funky Nav Robot */
+        .nav-robot { position: absolute; bottom: 0; left: 10%; width: 32px; height: 32px; z-index: 60; transition: left 3s linear, transform 0.3s, bottom 0.3s; pointer-events: none; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+        .bot-head { width: 24px; height: 20px; background: #222; border: 2px solid #FFD700; border-radius: 6px; position: relative; display: flex; justify-content: center; align-items: center; box-shadow: 0 0 5px rgba(255, 215, 0, 0.5); transition: all 0.3s; z-index: 2; }
+        .bot-head::before { content: ''; position: absolute; top: -6px; left: 50%; transform: translateX(-50%); width: 2px; height: 6px; background: #888; }
+        .bot-head::after { content: ''; position: absolute; top: -8px; left: 50%; transform: translateX(-50%); width: 4px; height: 4px; background: #FFD700; border-radius: 50%; animation: blink-antenna 2s infinite; }
+        .bot-eyes { display: flex; gap: 4px; }
+        .bot-eye { width: 4px; height: 4px; background: #00ffcc; border-radius: 50%; box-shadow: 0 0 3px #00ffcc; transition: all 0.3s; }
+        .bot-mouth { width: 8px; height: 2px; background: #00ffcc; margin-top: 2px; border-radius: 1px; transition: all 0.3s; }
+        .bot-body { width: 16px; height: 12px; background: #333; border: 1px solid #555; border-radius: 0 0 4px 4px; position: relative; z-index: 1; margin-top: -2px; }
+        .bot-foot { width: 6px; height: 4px; background: #555; position: absolute; bottom: -4px; transition: all 0.1s; }
+        .bot-foot.left { left: 0; }
+        .bot-foot.right { right: 0; }
+
+        .nav-robot.walking { animation: bot-bob 0.3s infinite alternate; }
+        .nav-robot.walking .bot-foot.left { animation: walk-l 0.6s infinite; }
+        .nav-robot.walking .bot-foot.right { animation: walk-r 0.6s infinite; }
+        .nav-robot.jumping { animation: bot-jump 0.8s ease-in-out; }
+        .nav-robot.sitting { bottom: -4px; }
+        .nav-robot.sitting .bot-foot { bottom: 0; transform: rotate(-90deg); }
+        .nav-robot.sitting .bot-head { transform: translateY(2px); }
+        .nav-robot.dancing .bot-head { border-color: #ff00cc; animation: head-bang 0.4s infinite alternate; }
+        .nav-robot.dancing .bot-eye { background: #ff00cc; box-shadow: 0 0 5px #ff00cc; }
+        .nav-robot.dancing { animation: bot-spin 1s infinite linear; }
+        .nav-robot.sad .bot-head { border-color: #3b82f6; }
+        .nav-robot.sad .bot-eye { background: #3b82f6; height: 2px; border-radius: 2px; box-shadow: none; transform: rotate(-10deg); }
+        .nav-robot.sad .bot-mouth { width: 6px; height: 3px; border-radius: 50% 50% 0 0; background: transparent; border-top: 1px solid #3b82f6; }
+        .nav-robot.sad::after { content: ''; position: absolute; top: 15px; right: 8px; width: 3px; height: 3px; background: #60a5fa; border-radius: 50%; animation: cry-tears 1s infinite; }
+
+        @keyframes bot-bob { 0% { transform: translateY(0); } 100% { transform: translateY(-2px); } }
+        @keyframes walk-l { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(4px); } }
+        @keyframes walk-r { 0%, 100% { transform: translateX(0); } 50% { transform: translateX(-4px); } }
+        @keyframes bot-jump { 0% { bottom: 0; } 50% { bottom: 30px; transform: rotate(360deg); } 100% { bottom: 0; } }
+        @keyframes head-bang { 0% { transform: rotate(-10deg); } 100% { transform: rotate(10deg); } }
+        @keyframes bot-spin { 0% { transform: scaleX(1); } 50% { transform: scaleX(-1); } 100% { transform: scaleX(1); } }
+        @keyframes cry-tears { 0% { opacity: 0; transform: translateY(0); } 50% { opacity: 1; } 100% { opacity: 0; transform: translateY(10px); } }
+        @keyframes blink-antenna { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
     </style>
 </head>
 <body class="antialiased selection:bg-brand-yellow selection:text-black">
@@ -331,6 +286,21 @@
     </div>
 
     <nav class="fixed w-full z-50 bg-black/80 backdrop-blur-md border-b border-white/10 transition-all duration-300" id="navbar">
+        
+        <!-- FUNKY NAV ROBOT -->
+        <div id="nav-robot" class="nav-robot">
+            <div class="bot-head">
+                <div class="bot-eyes">
+                    <div class="bot-eye"></div>
+                    <div class="bot-eye"></div>
+                </div>
+                <div class="bot-mouth"></div>
+            </div>
+            <div class="bot-body"></div>
+            <div class="bot-foot left"></div>
+            <div class="bot-foot right"></div>
+        </div>
+
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex items-center justify-between h-16">
                 <div class="flex-shrink-0 font-bold text-xl tracking-tighter text-white group cursor-pointer">
@@ -659,9 +629,7 @@
                              <span style="transition-delay: 500ms" class="skill-chip animate-blink-slow px-4 py-2 bg-gray-800 border border-gray-700 hover:bg-brand-yellow hover:text-black transition-all duration-300 cursor-default rounded text-sm text-gray-200 hover:border-brand-yellow hover:scale-105">Microservices</span>
                         </div>
                     </div>
-
-                    <!-- Expanded Domain Knowledge with Animation -->
-                      <div class="mb-10">
+                    <div class="mb-10">
                         <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                             <i data-lucide="globe-2" class="w-4 h-4 text-brand-yellow"></i> Banking Domains
                         </h4>
@@ -676,9 +644,10 @@
                              <span style="transition-delay: 350ms" class="skill-chip animate-blink-slow px-4 py-2 bg-gray-800 border border-gray-700 rounded text-sm text-gray-200 hover:text-brand-yellow hover:border-brand-yellow hover:bg-white/10 transition-all duration-300">Yes Pay</span>
                         </div>
                     </div>
-
+                    
                     <!-- Detailed Project Management with ANIMATED GRAPH -->
-                    <div class="mb-12">
+                    <!-- ID ADDED HERE FOR PRECISE OBSERVATION -->
+                    <div class="mb-12" id="proficiency-section">
                         <h4 class="text-white font-semibold mb-4 flex items-center gap-2">
                             <i data-lucide="bar-chart-2" class="w-4 h-4 text-brand-yellow"></i> Project Management Proficiency
                         </h4>
@@ -690,8 +659,7 @@
                                     <span class="text-brand-yellow font-bold">Expert (95%)</span>
                                 </div>
                                 <div class="w-full bg-gray-800 rounded-full h-2 overflow-hidden">
-                                    <!-- Inline 0% width for JS animation target -->
-                                    <div style="width: 0%" class="bg-brand-yellow h-full rounded-full progress-bar" data-width="95%"></div>
+                                    <div class="bg-brand-yellow h-full rounded-full progress-bar" data-width="95%" style="width: 0%"></div>
                                 </div>
                             </div>
                             
@@ -902,12 +870,6 @@
                             </div>
                         </a>
                     </div>
-                    <div class="mt-8">
-                         <!-- Restored Calendly Button with Safety Check -->
-                         <button onclick="if(window.Calendly) { Calendly.initPopupWidget({url: 'https://calendly.com/syogeshnk'}); } return false;" class="group px-8 py-4 bg-brand-yellow text-black font-bold hover:bg-brand-yellowHover transition-all duration-300 rounded-sm flex items-center gap-2 shadow-lg hover:shadow-xl hover:-translate-y-1 w-fit">
-                             <i data-lucide="calendar" class="w-5 h-5"></i> Schedule a Call
-                        </button>
-                    </div>
                     <div class="mt-10 flex gap-4">
                         <a href="https://www.youtube.com/@itverse1" target="_blank" rel="noopener noreferrer" class="p-3 border border-gray-800 rounded hover:border-[#FF0000] hover:text-[#FF0000] transition-all group" aria-label="YouTube Profile">
                             <i data-lucide="youtube" class="w-6 h-6"></i>
@@ -954,17 +916,13 @@
         <div class="p-4 border-b border-white/10 flex justify-between items-center bg-white/5 rounded-t-lg">
             <div class="flex items-center gap-3">
                 <div id="yog-avatar" class="yog-avatar">
-                    <div class="bot-head-container">
-                        <div class="bot-eye-housing">
-                            <div class="bot-lens">
-                                <div class="bot-pupil"></div>
-                            </div>
+                    <div class="yog-antenna"></div>
+                    <div class="yog-face">
+                        <div class="yog-eyes">
+                            <div class="yog-eye"></div>
+                            <div class="yog-eye"></div>
                         </div>
-                        <div class="bot-eye-housing">
-                            <div class="bot-lens">
-                                <div class="bot-pupil"></div>
-                            </div>
-                        </div>
+                        <div class="yog-mouth"></div>
                     </div>
                 </div>
                 <div>
@@ -1156,7 +1114,7 @@
             const cleanText = text.replace(/<[^>]*>/g, '');
             
             const utterance = new SpeechSynthesisUtterance(cleanText);
-            utterance.pitch = 1.2; // Higher pitch for robot voice
+            utterance.pitch = 1;
             utterance.rate = 1;
             
             // Optional: Try to find a good English voice
@@ -1213,19 +1171,15 @@
             const lowerReply = reply.toLowerCase();
             const avatar = document.getElementById('yog-avatar');
             
-            if(avatar) {
-                // Reset previous moods
-                avatar.classList.remove('happy', 'sad', 'cry');
-                
-                if (lowerReply.includes('haha') || lowerReply.includes('happy') || lowerReply.includes('great') || lowerReply.includes('love') || lowerReply.includes('passion')) {
-                    avatar.classList.add('happy');
-                    setTimeout(() => avatar.classList.remove('happy'), 4000);
-                } else if (lowerReply.includes('sorry') || lowerReply.includes('unfortunately') || lowerReply.includes('sad') || lowerReply.includes('apologize')) {
+            if (lowerReply.includes('haha') || lowerReply.includes('happy') || lowerReply.includes('great') || lowerReply.includes('love')) {
+                if(avatar) {
+                    avatar.classList.add('laughing');
+                    setTimeout(() => avatar.classList.remove('laughing'), 3000); // Laugh for 3s
+                }
+            } else if (lowerReply.includes('sorry') || lowerReply.includes('unfortunately') || lowerReply.includes('sad') || lowerReply.includes('apologize')) {
+                if(avatar) {
                     avatar.classList.add('sad');
-                    setTimeout(() => avatar.classList.remove('sad'), 4000);
-                } else if (lowerReply.includes('cry') || lowerReply.includes('tears')) {
-                    avatar.classList.add('cry');
-                    setTimeout(() => avatar.classList.remove('cry'), 4000);
+                    setTimeout(() => avatar.classList.remove('sad'), 4000); // Sad for 4s
                 }
             }
         }
@@ -1236,11 +1190,14 @@
             // Only do random stuff if not currently speaking or active
             if (avatar && !avatar.classList.contains('speaking') && !document.getElementById('chat-window').classList.contains('hidden')) {
                 const rand = Math.random();
-                if (rand > 0.90) { // 10% chance
-                    const moods = ['happy', 'sad', 'cry'];
-                    const mood = moods[Math.floor(Math.random() * moods.length)];
-                    avatar.classList.add(mood);
-                    setTimeout(() => avatar.classList.remove(mood), 2000);
+                if (rand > 0.95) { // 5% chance
+                    // Trigger Laugh
+                    avatar.classList.add('laughing');
+                    setTimeout(() => avatar.classList.remove('laughing'), 2000);
+                } else if (rand < 0.05) { // 5% chance
+                    // Trigger Sad/Bored
+                    avatar.classList.add('sad');
+                    setTimeout(() => avatar.classList.remove('sad'), 3000);
                 }
             }
         }, 5000); // Check every 5 seconds
@@ -1509,20 +1466,36 @@
                              setTimeout(() => { card.classList.add('vibrate-active'); setTimeout(() => card.classList.remove('vibrate-active'), 1200); }, i * 100);
                         });
                     }
+                    // ANIMATE IN: Restore transition and set width
                     entry.target.querySelectorAll('.progress-bar').forEach(bar => {
+                        bar.style.transition = 'width 1.5s cubic-bezier(0.22, 1, 0.36, 1)';
                         setTimeout(() => bar.style.width = bar.getAttribute('data-width'), 100);
                     });
+                    // ANIMATE IN: Counters (Run every time)
                     entry.target.querySelectorAll('.counter').forEach(c => {
-                         if (!c.classList.contains('counted')) { animateCounter(c); c.classList.add('counted'); }
+                         animateCounter(c); 
                     });
                 } else {
                      entry.target.classList.remove('active');
-                     entry.target.querySelectorAll('.progress-bar').forEach(b => b.style.width = '0%');
+                     // ANIMATE OUT: Instant reset to 0 for Progress Bars
+                     entry.target.querySelectorAll('.progress-bar').forEach(b => {
+                         b.style.transition = 'none';
+                         b.style.width = '0%';
+                     });
+                     // ANIMATE OUT: Instant reset to 0 for Counters
+                     entry.target.querySelectorAll('.counter').forEach(c => {
+                         const prefix = c.getAttribute('data-prefix') || '';
+                         const suffix = c.getAttribute('data-suffix') || '';
+                         c.innerText = `${prefix}0${suffix}`;
+                     });
                 }
             });
         }, observerOptions);
 
-        document.querySelectorAll('.reveal, #awards-section, #experience').forEach(s => observer.observe(s));
+        // Added #proficiency-section to observed list
+        document.querySelectorAll('.reveal, #awards-section, #experience, #proficiency-section').forEach(s => {
+             if(s) observer.observe(s);
+        });
 
         // Navbar Scroll Spy Logic
         window.addEventListener('scroll', () => {
@@ -1686,4 +1659,4 @@
         window.onload = initThreeJS;
     </script>
 </body>
-</html>	
+</html>
