@@ -8,7 +8,7 @@
     <link rel="canonical" href="https://yogesh-kotkar.com">
 
     <!-- Content Security Policy (CSP) -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com https://cdn.jsdelivr.net /cdn-cgi/; style-src 'self' https://fonts.googleapis.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self'; frame-ancestors 'none';">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://cdn.tailwindcss.com https://unpkg.com https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; img-src 'self' data: https://logo.clearbit.com https://upload.wikimedia.org https://images.unsplash.com; font-src 'self' https://fonts.gstatic.com; connect-src 'self' https://generativelanguage.googleapis.com;">
 
     <!-- Open Graph (OG) Tags -->
     <meta property="og:title" content="Yogesh K | Project / Product Manager & CSM®">
@@ -1098,9 +1098,9 @@
         }
 
         // --- Gemini AI Integration ---
-        // ⚠️ SECURITY: API Key should be called via backend server, not client-side
-        // This prevents exposing credentials. For now, using placeholder.
-        const apiKey = ""; 
+        // 🔴 CRITICAL: PASTE YOUR GOOGLE GEMINI API KEY BELOW
+        // You can get one here: https://aistudio.google.com/app/apikey
+        const apiKey = "AIzaSyC6zSQBSRYsGSmoLV5gKDN3b0eZVmf7z6g"; 
 
         function getPortfolioContext() {
             const skills = document.getElementById('tools-container').innerText;
@@ -1119,29 +1119,33 @@
         }
 
         async function callGemini(prompt, systemInstruction) {
-            // ✅ SECURE: Call backend API instead of exposing credentials
-            try {
-                const backendUrl = window.location.hostname === 'localhost'
-                    ? 'http://localhost:5000/api/chat'
-                    : '/api/chat'; // Use relative path in production
+            // Safety Check
+            if (!apiKey || apiKey === "PASTE_YOUR_GEMINI_API_KEY_HERE" || apiKey === "") {
+                console.error("❌ API Key is missing! Please update the 'const apiKey' line in your code.");
+                return "Error: API Key is missing. Please configure it in the source code.";
+            }
 
-                const response = await fetch(backendUrl, {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ prompt, systemInstruction })
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: { parts: [{ text: systemInstruction }] }
+                    })
                 });
-
+                
                 if (!response.ok) {
                     const errorData = await response.json();
-                    console.error("API Error:", errorData);
+                    console.error("AI API Error:", errorData);
                     throw new Error(`API Error: ${response.status}`);
                 }
-
+                
                 const data = await response.json();
-                return data.reply;
+                return data.candidates[0].content.parts[0].text;
             } catch (error) {
-                console.error("Chat Connection Error:", error);
-                return "I'm currently experiencing connectivity issues. Please contact the site owner.";
+                console.error("AI Connection Error:", error);
+                return "I'm currently experiencing connectivity issues. Please check the console for details.";
             }
         }
 
@@ -1229,19 +1233,12 @@
             if (!text) return;
 
             const msgs = document.getElementById('chat-messages');
-            const userMsg = document.createElement('div');
-            userMsg.className = 'chat-msg user';
-            userMsg.textContent = text;
-            msgs.appendChild(userMsg);
+            msgs.innerHTML += `<div class="chat-msg user">${text}</div>`;
             input.value = '';
             msgs.scrollTop = msgs.scrollHeight;
 
             const loadingId = 'loading-' + Date.now();
-            const loadingEl = document.createElement('div');
-            loadingEl.id = loadingId;
-            loadingEl.className = 'chat-msg ai';
-            loadingEl.innerHTML = '<span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span>';
-            msgs.appendChild(loadingEl);
+            msgs.innerHTML += `<div id="${loadingId}" class="chat-msg ai"><span class="typing-dot"></span><span class="typing-dot"></span><span class="typing-dot"></span></div>`;
             msgs.scrollTop = msgs.scrollHeight;
 
             const context = getPortfolioContext();
@@ -1250,11 +1247,8 @@
             const reply = await callGemini(text, systemPrompt);
 
             document.getElementById(loadingId).remove();
-            const aiMsg = document.createElement('div');
-            aiMsg.className = 'chat-msg ai';
-            const sanitizedReply = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/&lt;strong&gt;(.*?)&lt;\/strong&gt;/g, '<strong>$1</strong>');
-            aiMsg.innerHTML = sanitizedReply;
-            msgs.appendChild(aiMsg);
+            const formattedReply = reply.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
+            msgs.innerHTML += `<div class="chat-msg ai">${formattedReply}</div>`;
             msgs.scrollTop = msgs.scrollHeight;
             
             // Trigger Yog to Speak
@@ -1323,28 +1317,17 @@
             const btn = document.getElementById('contact-submit');
             const form = document.getElementById('contact-form');
             const successMsg = document.getElementById('success-msg');
-
-            const name = document.getElementById('name').value.trim();
-            const email = document.getElementById('email').value.trim();
-            const message = document.getElementById('message').value.trim();
-
-            if (!name || !email || !message) {
-                alert('Please fill all required fields');
-                return;
-            }
-
-            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-            if (!emailRegex.test(email)) {
-                alert('Please enter a valid email address');
-                return;
-            }
-
+            
             btn.disabled = true;
             btn.innerText = "Sending...";
 
             setTimeout(() => {
-                const subject = encodeURIComponent(`Portfolio Contact from ${name}`);
-                const body = encodeURIComponent(`Name: ${name}\nEmail: ${email}\n\nMessage:\n${message}`);
+                // Mock email logic
+                const name = document.getElementById('name').value;
+                const email = document.getElementById('email').value;
+                const message = document.getElementById('message').value;
+                const subject = `Portfolio Contact from ${name}`;
+                const body = `Name: ${name}%0D%0AEmail: ${email}%0D%0AMessage:%0D%0A${encodeURIComponent(message)}`;
                 window.location.href = `mailto:syogeshnk@gmail.com?subject=${subject}&body=${body}`;
 
                 form.style.display = 'none';
@@ -1525,16 +1508,10 @@
             const data = projectsData[id];
             if(!data) return;
 
-            document.getElementById('modal-company').textContent = data.company;
-            document.getElementById('modal-title').textContent = data.title;
-            document.getElementById('modal-description').textContent = data.description;
-            const iconEl = document.getElementById('modal-icon');
-            iconEl.innerHTML = '';
-            const tempDiv = document.createElement('div');
-            tempDiv.innerHTML = data.iconHTML;
-            while (tempDiv.firstChild) {
-                iconEl.appendChild(tempDiv.firstChild);
-            }
+            document.getElementById('modal-company').innerText = data.company;
+            document.getElementById('modal-title').innerText = data.title;
+            document.getElementById('modal-description').innerText = data.description;
+            document.getElementById('modal-icon').innerHTML = data.iconHTML;
             
             // Theme styling logic (simplified for brevity)
             let borderColor = 'border-brand-yellow/20';
@@ -1547,24 +1524,12 @@
             document.getElementById('modal-impact-title').className = `font-bold text-sm uppercase tracking-wider mb-3 ${textColor}`;
 
             const metricsList = document.getElementById('modal-metrics');
-            metricsList.innerHTML = '';
-            data.metrics.forEach(m => {
-                const li = document.createElement('li');
-                li.className = 'flex items-start gap-2';
-                li.innerHTML = `<i data-lucide="check-circle" class="w-4 h-4 ${textColor} mt-1 shrink-0"></i><span></span>`;
-                li.querySelector('span').textContent = m;
-                metricsList.appendChild(li);
-            });
-
+            metricsList.innerHTML = data.metrics.map(m => `<li class="flex items-start gap-2"><i data-lucide="check-circle" class="w-4 h-4 ${textColor} mt-1 shrink-0"></i><span>${m}</span></li>`).join('');
+            
             const tagsContainer = document.getElementById('modal-tags');
-            tagsContainer.innerHTML = '';
-            data.tags.forEach((t, i) => {
-                const span = document.createElement('span');
-                span.className = 'text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5 opacity-0';
-                span.style.animation = `tagPop 0.4s ease-out forwards ${i * 100}ms, blink 3s ease-in-out infinite ${i * 100 + 400}ms`;
-                span.textContent = t;
-                tagsContainer.appendChild(span);
-            });
+            tagsContainer.innerHTML = data.tags.map((t, i) => 
+                `<span class="text-xs bg-white/10 text-gray-300 px-3 py-1 rounded-full border border-white/5 opacity-0" style="animation: tagPop 0.4s ease-out forwards ${i * 100}ms, blink 3s ease-in-out infinite ${i * 100 + 400}ms">${t}</span>`
+            ).join('');
 
             lucide.createIcons();
             modal.classList.remove('hidden');
@@ -1861,4 +1826,27 @@
     </script>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
