@@ -1,0 +1,11 @@
+# robots.txt — Yogesh Kotkar Portfolio
+# https://yogesh-kotkar.com/robots.txt
+
+User-agent: *
+Allow: /
+
+# Block Netlify function endpoints from crawlers
+Disallow: /.netlify/
+
+# Sitemap location
+Sitemap: https://yogesh-kotkar.com/sitemap.xml

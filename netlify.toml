@@ -1,0 +1,102 @@
+# netlify.toml — Yogesh Kotkar Portfolio
+# Handles: security headers, serverless functions, redirects, robots
+
+[build]
+  publish = "."           # HTML is at root
+  functions = "netlify/functions"
+
+[dev]
+  port = 8888
+
+# ──────────────────────────────────────────────
+# SECURITY HEADERS (applied to all responses)
+# Fixes: X-Frame-Options, X-Content-Type-Options,
+#        CSP (HTTP header), Referrer-Policy,
+#        Permissions-Policy, CORP, COEP, COOP
+# ──────────────────────────────────────────────
+[[headers]]
+  for = "/*"
+  [headers.values]
+
+    # 1. Prevent clickjacking — site cannot be embedded in iframes
+    X-Frame-Options = "DENY"
+
+    # 2. Prevent MIME-type sniffing attacks
+    X-Content-Type-Options = "nosniff"
+
+    # 3. Content Security Policy (HTTP header — stronger than meta tag)
+    #    Allows: self, inline styles/scripts (needed for Tailwind/Three.js inline),
+    #    Google Fonts, cdnjs for Three.js, own Netlify function proxy
+    Content-Security-Policy = """
+      default-src 'self';
+      script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com;
+      style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+      font-src 'self' https://fonts.gstatic.com;
+      img-src 'self' data:;
+      connect-src 'self';
+      frame-ancestors 'none';
+      base-uri 'self';
+      form-action 'self' mailto:;
+    """
+
+    # 4. Referrer policy — don't leak URL paths to external sites
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+    # 5. Permissions policy — deny access to sensitive browser APIs
+    Permissions-Policy = "camera=(), microphone=(), geolocation=(), payment=(), usb=(), magnetometer=(), accelerometer=(), gyroscope=()"
+
+    # 6. HTTPS enforcement (Netlify also sends this, belt-and-suspenders)
+    Strict-Transport-Security = "max-age=63072000; includeSubDomains; preload"
+
+    # 7. Cross-Origin Opener Policy — prevents cross-origin window attacks
+    Cross-Origin-Opener-Policy = "same-origin-allow-popups"
+
+    # 8. Cross-Origin Embedder Policy
+    Cross-Origin-Embedder-Policy = "unsafe-none"
+
+    # 9. Cross-Origin Resource Policy
+    Cross-Origin-Resource-Policy = "same-origin"
+
+    # Remove server fingerprinting
+    X-Powered-By = ""
+    Server = ""
+
+# Cache static assets aggressively
+[[headers]]
+  for = "*.jpg"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.png"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# No cache for the HTML (so updates deploy instantly)
+[[headers]]
+  for = "*.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+# ──────────────────────────────────────────────
+# REDIRECTS
+# ──────────────────────────────────────────────
+
+# Force HTTPS
+[[redirects]]
+  from = "http://yogesh-kotkar.com/*"
+  to = "https://yogesh-kotkar.com/:splat"
+  status = 301
+  force = true
+
+# www → apex
+[[redirects]]
+  from = "https://www.yogesh-kotkar.com/*"
+  to = "https://yogesh-kotkar.com/:splat"
+  status = 301
+  force = true
