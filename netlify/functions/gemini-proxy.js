@@ -35,15 +35,16 @@ exports.handler = async (event) => {
         return { statusCode: 405, body: JSON.stringify({ error: 'Method Not Allowed' }) };
     }
 
-    // CORS — only allow requests from your own domain
+    // CORS — allow own domain + Netlify preview/staging URLs
     const origin = event.headers.origin || '';
-    const allowedOrigins = [
-        'https://yogesh-kotkar.com',
-        'https://www.yogesh-kotkar.com',
-        'http://localhost:8888',   // Netlify dev local
-        'http://localhost:3000',
-    ];
-    if (!allowedOrigins.includes(origin)) {
+    const isAllowedOrigin = (
+        origin === 'https://yogesh-kotkar.com' ||
+        origin === 'https://www.yogesh-kotkar.com' ||
+        origin === 'http://localhost:8888' ||
+        origin === 'http://localhost:3000' ||
+        /^https:\/\/[a-z0-9-]+\.netlify\.app$/.test(origin)  // Netlify preview + deploy URLs
+    );
+    if (!isAllowedOrigin) {
         return { statusCode: 403, body: JSON.stringify({ error: 'Forbidden' }) };
     }
 
@@ -72,7 +73,7 @@ exports.handler = async (event) => {
     // API key from environment — never from client
     const apiKey = process.env.GEMINI_API_KEY;
     if (!apiKey) {
-        console.error('GEMINI_API_KEY environment variable is not set');
+        console.error('[gemini-proxy] GEMINI_API_KEY environment variable is not set. Go to Netlify → Site Settings → Environment Variables and add it.');
         return { statusCode: 503, body: JSON.stringify({ error: 'AI service not configured' }) };
     }
 
